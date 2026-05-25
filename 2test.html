@@ -317,6 +317,12 @@ input, select, textarea { font-family: inherit; }
   transition: border-color var(--dur-fast) var(--ease-out);
 }
 .form-group input[type="number"] { font-family: var(--font-mono); }
+.form-group textarea {
+  min-height: 80px;
+  line-height: 1.5;
+  resize: vertical;
+  font-family: var(--font-body);
+}
 
 /* Age uses two side-by-side inputs (years + months) — single
    "ageMonths" was hostile UX for older children. */
@@ -636,14 +642,56 @@ input, select, textarea { font-family: inherit; }
       </div>
     </details>
 
+    <!-- =========================================================
+         PRESENTING CONCERNS — first free-text section. Establishes
+         the textarea binding pattern and the escapeHtml render path.
+         All free-text everywhere downstream flows through txtOr().
+         ========================================================= -->
+    <details class="section" id="section-concerns" open>
+      <summary class="section-header">
+        Presenting Concerns
+        <span class="phase-chip">in-visit</span>
+      </summary>
+      <div class="section-body">
+
+        <div class="form-group">
+          <label for="concerns-chief">Chief concern</label>
+          <textarea id="concerns-chief" rows="3"
+                    data-bind="concerns.chief"
+                    autocomplete="off"
+                    placeholder="What caregivers came in saying — in their words where possible."></textarea>
+          <span class="form-helper phi-hint">PHI-free — use "the child" or <code>[NAME]</code>.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="concerns-onset">Onset</label>
+          <textarea id="concerns-onset" rows="2"
+                    data-bind="concerns.onset"
+                    autocomplete="off"
+                    placeholder="When concerns were first noticed; perinatal context if relevant."></textarea>
+          <span class="form-helper phi-hint">PHI-free — use "the child" or <code>[NAME]</code>.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="concerns-progression">Progression</label>
+          <textarea id="concerns-progression" rows="2"
+                    data-bind="concerns.progression"
+                    autocomplete="off"
+                    placeholder="How concerns have evolved; recent regression, plateau, or change in pattern."></textarea>
+          <span class="form-helper phi-hint">PHI-free — use "the child" or <code>[NAME]</code>.</span>
+        </div>
+
+      </div>
+    </details>
+
     <!-- Placeholder for future sections — kept here as a visual
          reminder that the form will grow. Style intentionally
-         restrained so it doesn't compete with the real section. -->
+         restrained so it doesn't compete with the real sections. -->
     <p style="color: var(--ink-faint); font-size: 13px; font-style: italic; padding: var(--sp-4); text-align: center;">
-      Additional sections (Concerns, History, Observations, Instruments,
-      DSM-5-TR Criteria, Specifiers, Differentials, Letters) populate here
-      as they are built. Vertical slice committed first to prove the
-      state → render → copy → save round-trip end-to-end.
+      Remaining sections (History, Observations, Instruments, DSM-5-TR Criteria,
+      Specifiers, Differentials, School &amp; Letters) populate here as they
+      are built. Each follows the Demographics / Concerns pattern: state in
+      <code>defaults()</code>, form group with binding, render function extension.
     </p>
 
   </section>
@@ -718,10 +766,17 @@ function defaults() {
       sex:             '',
       insurerCategory: '',
     },
-    // Other sections (concerns, history, observations, instruments,
-    // dsm5tr, specifiers, differentials, letters) are added as their
+    concerns: {
+      chief:           '',
+      onset:           '',
+      progression:     '',
+    },
+    // Other sections (history, observations, instruments, dsm5tr,
+    // specifiers, differentials, school, letters) are added as their
     // form sections are implemented. defaults() must always return
     // the full canonical shape so loaded saves are merged predictably.
+    // Adding optional keys is additive; no schema bump required as
+    // long as the field is allowed to be empty/null on old saves.
   };
 }
 
@@ -894,6 +949,23 @@ async function decodeSession(str) {
    ============================================================ */
 function ph(label) { return '<mark class="ph">[' + label + ']</mark>'; }
 
+/* Escape user-supplied free text before it lands in the output
+   region's innerHTML. Anything reaching the preview/clipboard from
+   a textarea or text input MUST go through this — without it, a
+   clinician typing "<" or "&" produces broken markup, and a malicious
+   session string could inject scripts on import. */
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
+/* Render a free-text field or, if empty, an [UPPERCASE PLACEHOLDER]. */
+function txtOr(value, label) {
+  const v = (value == null ? '' : String(value)).trim();
+  return v ? escapeHtml(v) : ph(label);
+}
+
 function totalMonths(d) {
   const y = (typeof d.ageYears  === 'number') ? d.ageYears  : null;
   const m = (typeof d.ageMonths === 'number') ? d.ageMonths : null;
@@ -927,9 +999,11 @@ function insurerSentence(cat) {
 }
 
 /* renderAP — Assessment & Plan, vertical-slice version.
-   Cites: hyman2020 (overall ASD evaluation framing). */
+   Cites: hyman2020 (overall ASD evaluation framing).
+   Sections wired so far: Demographics, Presenting Concerns. */
 function renderAP(s) {
   const d = s.demographics;
+  const c = s.concerns || {};
   const age = ageDisplay(d);
   const desc = sexDescriptor(d.sex, d);
   const insurer = insurerSentence(d.insurerCategory);
@@ -938,6 +1012,9 @@ function renderAP(s) {
     '<p><strong>Patient:</strong> ' + ph('PATIENT NAME') + ', DOB ' + ph('DOB') + ', MRN ' + ph('MRN') + '.</p>',
     '<p><strong>Date of evaluation:</strong> ' + ph('EVALUATION DATE') + '. <strong>Insurance:</strong> ' + insurer + '</p>',
     '<p><strong>Assessment.</strong> ' + ph('PATIENT NAME') + ' is a ' + age + ' ' + desc + ' presenting for comprehensive diagnostic evaluation of suspected autism spectrum disorder.</p>',
+    '<p><strong>Presenting concerns.</strong> ' + txtOr(c.chief, 'CHIEF CONCERN') + '</p>',
+    '<p><strong>Onset.</strong> ' + txtOr(c.onset, 'ONSET') + '</p>',
+    '<p><strong>Progression.</strong> ' + txtOr(c.progression, 'PROGRESSION') + '</p>',
     '<p><em>Additional Assessment &amp; Plan content populates as remaining sections of the documentation form are completed.</em></p>',
   ].join('');
 }

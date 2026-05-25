@@ -27,6 +27,13 @@ Each entry has a stable key (used in code comments and renderer cite-fields), a 
 | assq-ehlers-1999     | planned                    | —           | —             | pending  | ASSQ |
 | mdq-hirschfeld-2000  | planned                    | —           | —             | pending  | MDQ adult; needs adolescent-adaptation note |
 | crafft-knight-2002   | planned                    | —           | —             | pending  | CRAFFT (N-update separate) |
+| mchat-rf-cutoffs     | planned                    | —           | —             | pending  | uses mchat-robins-2014 cutoffs |
+| nih-asq-horowitz-2012| planned                    | —           | —             | pending  | NIH ASQ (Ask Suicide-Screening Questions) |
+| mfq-angold-1995      | planned                    | —           | —             | pending  | Mood and Feelings Questionnaire |
+| pq16-ising-2012      | planned                    | —           | —             | pending  | Prodromal Questionnaire-16 |
+| rita-t-choueiri-2015 | planned                    | —           | —             | pending  | RITA-T autism toddler screener |
+| srs2-constantino-2012| planned                    | —           | —             | pending  | Social Responsiveness Scale, 2nd ed. |
+| gars3-gilliam-2014   | planned                    | —           | —             | pending  | Gilliam Autism Rating Scale, 3rd ed. |
 | idea-part-c          | planned                    | —           | —             | pending  | Early Steps eligibility basis |
 | idea-part-b          | planned                    | —           | —             | pending  | IEP / Child Find basis |
 | fla-early-steps      | planned                    | —           | —             | pending  | Florida Early Steps statute |
@@ -117,6 +124,30 @@ Used for: MDQ adult thresholds. WARY: when used in adolescents, attach the Wagne
 **crafft-knight-2002**
 Knight JR, Sherritt L, Shrier LA, Harris SK, Chang G. Validity of the CRAFFT substance abuse screening test among adolescent clinic patients. *Arch Pediatr Adolesc Med*. 2002;156(6):607-614.
 Used for: CRAFFT score ≥2 referral threshold. CRAFFT-N (nicotine update) cite to be added when verified.
+
+**nih-asq-horowitz-2012**
+Horowitz LM, Bridge JA, Teach SJ, et al. Ask Suicide-Screening Questions (ASQ): a brief instrument for the pediatric emergency department. *Arch Pediatr Adolesc Med*. 2012;166(12):1170-1176.
+Used for: NIH ASQ — any yes on items 1-4 indicates a non-acute positive screen; yes on item 5 (current thoughts) indicates acute risk requiring immediate safety evaluation.
+
+**mfq-angold-1995**
+Angold A, Costello EJ, Messer SC, Pickles A, Winder F, Silver D. The development of a short questionnaire for use in epidemiological studies of depression in children and adolescents. *Int J Methods Psychiatr Res*. 1995;5:237-249.
+Used for: MFQ-Child short form total ≥12 (or long form ≥27) suggests depressive symptoms warranting follow-up.
+
+**pq16-ising-2012**
+Ising HK, Veling W, Loewy RL, et al. The validity of the 16-item version of the Prodromal Questionnaire (PQ-16) to screen for ultra high risk of developing psychosis in the general help-seeking population. *Schizophr Bull*. 2012;38(6):1288-1296.
+Used for: PQ-16 ≥6 endorsed items indicates a positive screen for prodromal/ultra-high-risk psychosis features warranting specialty referral.
+
+**rita-t-choueiri-2015**
+Choueiri R, Wagner S. A new interactive screening test for autism spectrum disorders in toddlers. *J Pediatr*. 2015;167(2):460-466.
+Used for: RITA-T total ≥10 indicates positive autism screen in toddlers 18-36 months.
+
+**srs2-constantino-2012**
+Constantino JN, Gruber CP. *Social Responsiveness Scale, Second Edition (SRS-2) Manual*. Western Psychological Services; 2012.
+Used for: SRS-2 total T-score bands: <60 within normal limits, 60-65 mild, 66-75 moderate, ≥76 severe range associated with clinically significant social communication impairment.
+
+**gars3-gilliam-2014**
+Gilliam JE. *Gilliam Autism Rating Scale, Third Edition (GARS-3) Manual*. PRO-ED; 2014.
+Used for: GARS-3 Autism Index categorical bands: ≥85 "Very likely" probability of autism; 71-84 "Probable"; ≤70 "Unlikely."
 
 ---
 

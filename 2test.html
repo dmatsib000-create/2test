@@ -1190,6 +1190,176 @@ input, select, textarea { font-family: inherit; }
           </div>
         </div>
 
+        <div class="instrument-card" data-instrument="mchat_rf">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.mchat_rf.used" class="instrument-toggle">
+            <span class="instrument-name">M-CHAT-R/F
+              <span class="instrument-fullname">Modified Checklist for Autism in Toddlers, Revised with Follow-up</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-inputs">
+              <div class="form-group">
+                <label for="mchat-total">Total score (0–20)</label>
+                <input type="number" id="mchat-total" min="0" max="20" step="1" inputmode="numeric"
+                       data-bind="instruments.mchat_rf.total" autocomplete="off" placeholder="0–20">
+              </div>
+            </div>
+            <div class="instrument-generated" data-generated-for="mchat_rf">Enter a total to see auto-interpretation.</div>
+            <div class="form-group">
+              <label for="mchat-override">Override (optional)</label>
+              <textarea id="mchat-override" rows="2" data-bind="instruments.mchat_rf.override"
+                        autocomplete="off" placeholder="Leave blank to use the auto-interpretation above."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="instrument-card" data-instrument="aq10">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.aq10.used" class="instrument-toggle">
+            <span class="instrument-name">AQ-10
+              <span class="instrument-fullname">Short Autism Spectrum Quotient</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-inputs">
+              <div class="form-group">
+                <label for="aq10-total">Total (0–10)</label>
+                <input type="number" id="aq10-total" min="0" max="10" step="1" inputmode="numeric"
+                       data-bind="instruments.aq10.total" autocomplete="off" placeholder="0–10">
+              </div>
+            </div>
+            <div class="instrument-generated" data-generated-for="aq10">Enter a total to see auto-interpretation.</div>
+            <div class="form-group">
+              <label for="aq10-override">Override (optional)</label>
+              <textarea id="aq10-override" rows="2" data-bind="instruments.aq10.override"
+                        autocomplete="off" placeholder="Leave blank to use the auto-interpretation above."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="instrument-card" data-instrument="assq">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.assq.used" class="instrument-toggle">
+            <span class="instrument-name">ASSQ (parent)
+              <span class="instrument-fullname">Autism Spectrum Screening Questionnaire — parent informant</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-inputs">
+              <div class="form-group">
+                <label for="assq-total">Total (0–54)</label>
+                <input type="number" id="assq-total" min="0" max="54" step="1" inputmode="numeric"
+                       data-bind="instruments.assq.total" autocomplete="off" placeholder="0–54">
+              </div>
+            </div>
+            <div class="instrument-generated" data-generated-for="assq">Enter a total to see auto-interpretation.</div>
+            <div class="form-group">
+              <label for="assq-override">Override (optional)</label>
+              <textarea id="assq-override" rows="2" data-bind="instruments.assq.override"
+                        autocomplete="off" placeholder="Leave blank to use the auto-interpretation above."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="instrument-card" data-instrument="srs2">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.srs2.used" class="instrument-toggle">
+            <span class="instrument-name">SRS-2
+              <span class="instrument-fullname">Social Responsiveness Scale, 2nd ed.</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-inputs">
+              <div class="form-group">
+                <label for="srs2-tscore">Total T-score (40–90)</label>
+                <input type="number" id="srs2-tscore" min="40" max="90" step="1" inputmode="numeric"
+                       data-bind="instruments.srs2.tscore" autocomplete="off" placeholder="T-score">
+              </div>
+            </div>
+            <div class="instrument-generated" data-generated-for="srs2">Enter a T-score to see auto-interpretation.</div>
+            <div class="form-group">
+              <label for="srs2-override">Override (optional)</label>
+              <textarea id="srs2-override" rows="2" data-bind="instruments.srs2.override"
+                        autocomplete="off" placeholder="Subscale detail or alternative framing."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="instrument-card" data-instrument="gars3">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.gars3.used" class="instrument-toggle">
+            <span class="instrument-name">GARS-3
+              <span class="instrument-fullname">Gilliam Autism Rating Scale, 3rd ed.</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-inputs">
+              <div class="form-group">
+                <label for="gars3-index">Autism Index (50–150)</label>
+                <input type="number" id="gars3-index" min="50" max="150" step="1" inputmode="numeric"
+                       data-bind="instruments.gars3.autismIndex" autocomplete="off" placeholder="Index">
+              </div>
+            </div>
+            <div class="instrument-generated" data-generated-for="gars3">Enter the Autism Index to see auto-interpretation.</div>
+            <div class="form-group">
+              <label for="gars3-override">Override (optional)</label>
+              <textarea id="gars3-override" rows="2" data-bind="instruments.gars3.override"
+                        autocomplete="off" placeholder="Subscale detail or alternative framing."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="instrument-card" data-instrument="rita_t">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.rita_t.used" class="instrument-toggle">
+            <span class="instrument-name">RITA-T
+              <span class="instrument-fullname">Rapid Interactive Screening Test for Autism in Toddlers (18–36 mo)</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-inputs">
+              <div class="form-group">
+                <label for="ritat-total">Total score</label>
+                <input type="number" id="ritat-total" min="0" max="50" step="1" inputmode="numeric"
+                       data-bind="instruments.rita_t.total" autocomplete="off" placeholder="0–50">
+              </div>
+            </div>
+            <div class="instrument-generated" data-generated-for="rita_t">Enter a total to see auto-interpretation.</div>
+            <div class="form-group">
+              <label for="ritat-override">Override (optional)</label>
+              <textarea id="ritat-override" rows="2" data-bind="instruments.rita_t.override"
+                        autocomplete="off" placeholder="Leave blank to use the auto-interpretation above."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="instrument-card" data-instrument="ados2">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.ados2.used" class="instrument-toggle">
+            <span class="instrument-name">ADOS-2
+              <span class="instrument-fullname">Autism Diagnostic Observation Schedule, 2nd ed. (module-dependent)</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-inputs">
+              <div class="form-group">
+                <label for="ados-comp">Comparison Score (1–10)</label>
+                <input type="number" id="ados-comp" min="1" max="10" step="1" inputmode="numeric"
+                       data-bind="instruments.ados2.comparisonScore" autocomplete="off" placeholder="1–10">
+              </div>
+            </div>
+            <div class="instrument-generated is-empty">ADOS-2 interpretation is module-dependent and judgment-driven. Write below.</div>
+            <div class="form-group">
+              <label for="ados-override">Clinical interpretation</label>
+              <textarea id="ados-override" rows="3" data-bind="instruments.ados2.override"
+                        autocomplete="off"
+                        placeholder="e.g., Module 3, total 14, Comparison Score 7 — within the 'moderate' level of autism-related symptoms."></textarea>
+              <span class="form-helper phi-hint">PHI-free — use "the child" or <code>[NAME]</code>.</span>
+            </div>
+          </div>
+        </div>
+
         <h4 class="instrument-group">ADHD</h4>
 
         <div class="instrument-card" data-instrument="vanderbilt">
@@ -1236,6 +1406,61 @@ input, select, textarea { font-family: inherit; }
           </div>
         </div>
 
+        <div class="instrument-card" data-instrument="snap_iv">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.snap_iv.used" class="instrument-toggle">
+            <span class="instrument-name">SNAP-IV (parent)
+              <span class="instrument-fullname">Swanson, Nolan, and Pelham IV — parent form</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-inputs">
+              <div class="form-group">
+                <label for="snap-inatt">Inattentive item mean (0.00–3.00)</label>
+                <input type="number" id="snap-inatt" min="0" max="3" step="0.01" inputmode="decimal"
+                       data-bind="instruments.snap_iv.inattentiveMean" autocomplete="off" placeholder="0.00–3.00">
+              </div>
+              <div class="form-group">
+                <label for="snap-hyper">Hyperactive/impulsive mean (0.00–3.00)</label>
+                <input type="number" id="snap-hyper" min="0" max="3" step="0.01" inputmode="decimal"
+                       data-bind="instruments.snap_iv.hyperactiveMean" autocomplete="off" placeholder="0.00–3.00">
+              </div>
+            </div>
+            <div class="instrument-generated" data-generated-for="snap_iv">Enter item means to see auto-interpretation.</div>
+            <div class="form-group">
+              <label for="snap-override">Override (optional)</label>
+              <textarea id="snap-override" rows="2" data-bind="instruments.snap_iv.override"
+                        autocomplete="off" placeholder="Leave blank to use the auto-interpretation above."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="instrument-card" data-instrument="adhd_rs_iv_preschool">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.adhd_rs_iv_preschool.used" class="instrument-toggle">
+            <span class="instrument-name">ADHD Rating Scale IV — Preschool
+              <span class="instrument-fullname">McGoey preschool adaptation; percentile-based</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-inputs">
+              <div class="form-group">
+                <label for="adhdrs-pct">Overall percentile</label>
+                <input type="number" id="adhdrs-pct" min="0" max="100" step="1" inputmode="numeric"
+                       data-bind="instruments.adhd_rs_iv_preschool.percentile" autocomplete="off" placeholder="0–100">
+              </div>
+            </div>
+            <div class="instrument-generated is-empty">Preschool ADHD-RS-IV interpretation is age/sex-normative; write below.</div>
+            <div class="form-group">
+              <label for="adhdrs-override">Clinical interpretation</label>
+              <textarea id="adhdrs-override" rows="3" data-bind="instruments.adhd_rs_iv_preschool.override"
+                        autocomplete="off"
+                        placeholder="e.g., Inattentive subscale 92nd %ile, Hyperactive/Impulsive 88th %ile..."></textarea>
+              <span class="form-helper phi-hint">PHI-free — use "the child" or <code>[NAME]</code>.</span>
+            </div>
+          </div>
+        </div>
+
         <h4 class="instrument-group">Anxiety &amp; mood</h4>
 
         <div class="instrument-card" data-instrument="phq9a">
@@ -1265,6 +1490,245 @@ input, select, textarea { font-family: inherit; }
                         data-bind="instruments.phq9a.override"
                         autocomplete="off"
                         placeholder="Leave blank to use the auto-interpretation above."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="instrument-card" data-instrument="scared">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.scared.used" class="instrument-toggle">
+            <span class="instrument-name">SCARED
+              <span class="instrument-fullname">Screen for Child Anxiety Related Emotional Disorders</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-inputs">
+              <div class="form-group">
+                <label for="scared-total">Total (0–82)</label>
+                <input type="number" id="scared-total" min="0" max="82" step="1" inputmode="numeric"
+                       data-bind="instruments.scared.total" autocomplete="off" placeholder="0–82">
+              </div>
+            </div>
+            <div class="instrument-generated" data-generated-for="scared">Enter a total to see auto-interpretation.</div>
+            <div class="form-group">
+              <label for="scared-override">Override (optional)</label>
+              <textarea id="scared-override" rows="2" data-bind="instruments.scared.override"
+                        autocomplete="off" placeholder="Subscale detail (panic, GAD, separation, social, school avoidance)."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="instrument-card" data-instrument="gad7">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.gad7.used" class="instrument-toggle">
+            <span class="instrument-name">GAD-7
+              <span class="instrument-fullname">Generalized Anxiety Disorder 7-item scale</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-inputs">
+              <div class="form-group">
+                <label for="gad7-total">Total (0–21)</label>
+                <input type="number" id="gad7-total" min="0" max="21" step="1" inputmode="numeric"
+                       data-bind="instruments.gad7.total" autocomplete="off" placeholder="0–21">
+              </div>
+            </div>
+            <div class="instrument-generated" data-generated-for="gad7">Enter a total to see auto-interpretation.</div>
+            <div class="form-group">
+              <label for="gad7-override">Override (optional)</label>
+              <textarea id="gad7-override" rows="2" data-bind="instruments.gad7.override"
+                        autocomplete="off" placeholder="Leave blank to use the auto-interpretation above."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="instrument-card" data-instrument="mfq">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.mfq.used" class="instrument-toggle">
+            <span class="instrument-name">MFQ
+              <span class="instrument-fullname">Mood and Feelings Questionnaire — short form</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-inputs">
+              <div class="form-group">
+                <label for="mfq-total">Total (0–26)</label>
+                <input type="number" id="mfq-total" min="0" max="26" step="1" inputmode="numeric"
+                       data-bind="instruments.mfq.total" autocomplete="off" placeholder="0–26">
+              </div>
+            </div>
+            <div class="instrument-generated" data-generated-for="mfq">Enter a total to see auto-interpretation.</div>
+            <div class="form-group">
+              <label for="mfq-override">Override (optional)</label>
+              <textarea id="mfq-override" rows="2" data-bind="instruments.mfq.override"
+                        autocomplete="off" placeholder="Leave blank to use the auto-interpretation above."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="instrument-card" data-instrument="mdq">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.mdq.used" class="instrument-toggle">
+            <span class="instrument-name">MDQ
+              <span class="instrument-fullname">Mood Disorder Questionnaire (WARY: adult-validated)</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-inputs">
+              <div class="form-group">
+                <label for="mdq-pos">Positive items (0–13)</label>
+                <input type="number" id="mdq-pos" min="0" max="13" step="1" inputmode="numeric"
+                       data-bind="instruments.mdq.positiveItems" autocomplete="off" placeholder="0–13">
+              </div>
+              <div class="form-group">
+                <label for="mdq-sev">Q3 functional impairment</label>
+                <select id="mdq-sev" data-bind="instruments.mdq.q3Severity">
+                  <option value="">—</option>
+                  <option value="none">No problem</option>
+                  <option value="minor">Minor problem</option>
+                  <option value="moderate">Moderate problem</option>
+                  <option value="serious">Serious problem</option>
+                </select>
+              </div>
+            </div>
+            <div class="checkbox-grid">
+              <label class="checkbox-item">
+                <input type="checkbox" data-bind="instruments.mdq.q2Concurrent">
+                <span>Q2: symptoms occurred during same period</span>
+              </label>
+            </div>
+            <div class="instrument-generated" data-generated-for="mdq">Enter positive items, Q2, and Q3 to see auto-interpretation.</div>
+            <div class="form-group">
+              <label for="mdq-override">Override (optional)</label>
+              <textarea id="mdq-override" rows="2" data-bind="instruments.mdq.override"
+                        autocomplete="off" placeholder="Leave blank to use the auto-interpretation above."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="instrument-card" data-instrument="pas">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.pas.used" class="instrument-toggle">
+            <span class="instrument-name">PAS
+              <span class="instrument-fullname">Preschool Anxiety Scale (Spence)</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-inputs">
+              <div class="form-group">
+                <label for="pas-raw">Raw total</label>
+                <input type="number" id="pas-raw" min="0" max="112" step="1" inputmode="numeric"
+                       data-bind="instruments.pas.rawTotal" autocomplete="off" placeholder="Raw">
+              </div>
+            </div>
+            <div class="instrument-generated is-empty">PAS T-score conversion is sex/age normative; write below.</div>
+            <div class="form-group">
+              <label for="pas-override">Clinical interpretation</label>
+              <textarea id="pas-override" rows="3" data-bind="instruments.pas.override"
+                        autocomplete="off" placeholder="e.g., T-score equivalents and subscale pattern."></textarea>
+              <span class="form-helper phi-hint">PHI-free — use "the child" or <code>[NAME]</code>.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="instrument-card" data-instrument="scas">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.scas.used" class="instrument-toggle">
+            <span class="instrument-name">SCAS
+              <span class="instrument-fullname">Spence Children’s Anxiety Scale</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-inputs">
+              <div class="form-group">
+                <label for="scas-raw">Raw total</label>
+                <input type="number" id="scas-raw" min="0" max="114" step="1" inputmode="numeric"
+                       data-bind="instruments.scas.rawTotal" autocomplete="off" placeholder="Raw">
+              </div>
+            </div>
+            <div class="instrument-generated is-empty">SCAS T-score conversion is sex/age normative; write below.</div>
+            <div class="form-group">
+              <label for="scas-override">Clinical interpretation</label>
+              <textarea id="scas-override" rows="3" data-bind="instruments.scas.override"
+                        autocomplete="off" placeholder="e.g., T-score equivalents and subscale pattern."></textarea>
+              <span class="form-helper phi-hint">PHI-free — use "the child" or <code>[NAME]</code>.</span>
+            </div>
+          </div>
+        </div>
+
+        <h4 class="instrument-group">Suicide &amp; psychosis screens</h4>
+
+        <div class="instrument-card" data-instrument="nih_asq">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.nih_asq.used" class="instrument-toggle">
+            <span class="instrument-name">NIH ASQ
+              <span class="instrument-fullname">Ask Suicide-Screening Questions (NIMH)</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="checkbox-grid">
+              <label class="checkbox-item"><input type="checkbox" data-bind="instruments.nih_asq.q1"><span>Q1: wished dead (past few weeks)</span></label>
+              <label class="checkbox-item"><input type="checkbox" data-bind="instruments.nih_asq.q2"><span>Q2: family better off (past few weeks)</span></label>
+              <label class="checkbox-item"><input type="checkbox" data-bind="instruments.nih_asq.q3"><span>Q3: thoughts of killing self (past week)</span></label>
+              <label class="checkbox-item"><input type="checkbox" data-bind="instruments.nih_asq.q4"><span>Q4: ever tried to kill self</span></label>
+              <label class="checkbox-item"><input type="checkbox" data-bind="instruments.nih_asq.q5Acute"><span>Q5: thinking about killing self <em>right now</em></span></label>
+              <label class="checkbox-item"><input type="checkbox" data-bind="instruments.nih_asq.completed"><span>Screen completed (no items endorsed)</span></label>
+            </div>
+            <div class="instrument-generated" data-generated-for="nih_asq">Mark items endorsed (or check "completed" for a negative screen).</div>
+            <div class="form-group">
+              <label for="asq-override">Override (optional)</label>
+              <textarea id="asq-override" rows="2" data-bind="instruments.nih_asq.override"
+                        autocomplete="off" placeholder="Leave blank to use the auto-interpretation above."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="instrument-card" data-instrument="pq16">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.pq16.used" class="instrument-toggle">
+            <span class="instrument-name">PQ-16
+              <span class="instrument-fullname">Prodromal Questionnaire-16</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-inputs">
+              <div class="form-group">
+                <label for="pq16-total">Endorsed items (0–16)</label>
+                <input type="number" id="pq16-total" min="0" max="16" step="1" inputmode="numeric"
+                       data-bind="instruments.pq16.total" autocomplete="off" placeholder="0–16">
+              </div>
+            </div>
+            <div class="instrument-generated" data-generated-for="pq16">Enter endorsed items to see auto-interpretation.</div>
+            <div class="form-group">
+              <label for="pq16-override">Override (optional)</label>
+              <textarea id="pq16-override" rows="2" data-bind="instruments.pq16.override"
+                        autocomplete="off" placeholder="Distress detail or alternative framing."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <h4 class="instrument-group">Substance use</h4>
+
+        <div class="instrument-card" data-instrument="crafft_n">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.crafft_n.used" class="instrument-toggle">
+            <span class="instrument-name">CRAFFT-N
+              <span class="instrument-fullname">CRAFFT 2.1+N substance and nicotine use screen</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-inputs">
+              <div class="form-group">
+                <label for="crafft-total">CRAFFT score (0–6)</label>
+                <input type="number" id="crafft-total" min="0" max="6" step="1" inputmode="numeric"
+                       data-bind="instruments.crafft_n.total" autocomplete="off" placeholder="0–6">
+              </div>
+            </div>
+            <div class="instrument-generated" data-generated-for="crafft_n">Enter score to see auto-interpretation.</div>
+            <div class="form-group">
+              <label for="crafft-override">Override (optional)</label>
+              <textarea id="crafft-override" rows="2" data-bind="instruments.crafft_n.override"
+                        autocomplete="off" placeholder="Leave blank to use the auto-interpretation above."></textarea>
             </div>
           </div>
         </div>
@@ -1321,6 +1785,180 @@ input, select, textarea { font-family: inherit; }
                         data-bind="instruments.dp4.override"
                         autocomplete="off"
                         placeholder="e.g., DP-4 yielded standard scores in the average range across all five domains, with relative weakness in social-emotional..."></textarea>
+              <span class="form-helper phi-hint">PHI-free — use "the child" or <code>[NAME]</code>.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="instrument-card" data-instrument="dayc2">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.dayc2.used" class="instrument-toggle">
+            <span class="instrument-name">DAYC-2
+              <span class="instrument-fullname">Developmental Assessment of Young Children, 2nd ed. (Florida Early Steps)</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-inputs">
+              <div class="form-group">
+                <label for="dayc2-gdq">General Development Quotient</label>
+                <input type="number" id="dayc2-gdq" min="40" max="160" step="1" inputmode="numeric"
+                       data-bind="instruments.dayc2.generalDevQ" autocomplete="off" placeholder="SS">
+              </div>
+            </div>
+            <div class="instrument-generated is-empty">DAYC-2 domain interpretation is judgment-driven. Write below.</div>
+            <div class="form-group">
+              <label for="dayc2-override">Clinical interpretation</label>
+              <textarea id="dayc2-override" rows="3" data-bind="instruments.dayc2.override"
+                        autocomplete="off" placeholder="e.g., Cognitive 78, Communication 72, Social-Emotional 81..."></textarea>
+              <span class="form-helper phi-hint">PHI-free — use "the child" or <code>[NAME]</code>.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="instrument-card" data-instrument="asq3">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.asq3.used" class="instrument-toggle">
+            <span class="instrument-name">ASQ-3
+              <span class="instrument-fullname">Ages &amp; Stages Questionnaire, 3rd ed.</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-inputs">
+              <div class="form-group">
+                <label for="asq3-band">Age band</label>
+                <input type="text" id="asq3-band" data-bind="instruments.asq3.ageBand"
+                       autocomplete="off" placeholder="e.g., 24 month interval">
+              </div>
+            </div>
+            <div class="instrument-generated is-empty">ASQ-3 cutoffs vary by age band across 5 domains. Write below.</div>
+            <div class="form-group">
+              <label for="asq3-override">Clinical interpretation</label>
+              <textarea id="asq3-override" rows="3" data-bind="instruments.asq3.override"
+                        autocomplete="off" placeholder="e.g., Communication and Problem Solving fell below cutoff at the 24-month interval; remaining domains in the monitoring zone..."></textarea>
+              <span class="form-helper phi-hint">PHI-free — use "the child" or <code>[NAME]</code>.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="instrument-card" data-instrument="asq_se2">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.asq_se2.used" class="instrument-toggle">
+            <span class="instrument-name">ASQ:SE-2
+              <span class="instrument-fullname">Ages &amp; Stages Questionnaire: Social-Emotional, 2nd ed.</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-inputs">
+              <div class="form-group">
+                <label for="asqse2-total">Total score</label>
+                <input type="number" id="asqse2-total" min="0" max="300" step="5" inputmode="numeric"
+                       data-bind="instruments.asq_se2.total" autocomplete="off" placeholder="Raw">
+              </div>
+            </div>
+            <div class="instrument-generated is-empty">ASQ:SE-2 cutoffs are age-band specific. Write below.</div>
+            <div class="form-group">
+              <label for="asqse2-override">Clinical interpretation</label>
+              <textarea id="asqse2-override" rows="3" data-bind="instruments.asq_se2.override"
+                        autocomplete="off" placeholder="e.g., Score of 85 at the 24-month interval is above the cutoff of 75, suggesting further assessment is warranted..."></textarea>
+              <span class="form-helper phi-hint">PHI-free — use "the child" or <code>[NAME]</code>.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="instrument-card" data-instrument="kbit2r">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.kbit2r.used" class="instrument-toggle">
+            <span class="instrument-name">KBIT-2R
+              <span class="instrument-fullname">Kaufman Brief Intelligence Test, 2nd ed. (Renormed)</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-inputs">
+              <div class="form-group">
+                <label for="kbit2-composite">IQ Composite (40–160)</label>
+                <input type="number" id="kbit2-composite" min="40" max="160" step="1" inputmode="numeric"
+                       data-bind="instruments.kbit2r.composite" autocomplete="off" placeholder="Composite IQ">
+              </div>
+            </div>
+            <div class="instrument-generated is-empty">KBIT-2R composite requires clinical interpretation; note floor-effect caution per pitts-mervis-2016 in young children.</div>
+            <div class="form-group">
+              <label for="kbit2-override">Clinical interpretation</label>
+              <textarea id="kbit2-override" rows="3" data-bind="instruments.kbit2r.override"
+                        autocomplete="off" placeholder="e.g., Verbal SS 95, Non-Verbal SS 88, IQ Composite 91 — average range overall..."></textarea>
+              <span class="form-helper phi-hint">PHI-free — use "the child" or <code>[NAME]</code>.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="instrument-card" data-instrument="swyc">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.swyc.used" class="instrument-toggle">
+            <span class="instrument-name">SWYC
+              <span class="instrument-fullname">Survey of Well-being of Young Children (all applicable parts)</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-generated is-empty">SWYC includes Milestones, BPSC, PPSC, POSI, and Family Questions. Write findings below.</div>
+            <div class="form-group">
+              <label for="swyc-override">Clinical interpretation</label>
+              <textarea id="swyc-override" rows="4" data-bind="instruments.swyc.override"
+                        autocomplete="off" placeholder="e.g., Milestones: 3/10 concerns endorsed; POSI positive screen; PPSC and BPSC negative; Family Questions negative."></textarea>
+              <span class="form-helper phi-hint">PHI-free — use "the child" or <code>[NAME]</code>.</span>
+            </div>
+          </div>
+        </div>
+
+        <h4 class="instrument-group">Behavioral / quality of life</h4>
+
+        <div class="instrument-card" data-instrument="promis_ec">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.promis_ec.used" class="instrument-toggle">
+            <span class="instrument-name">PROMIS EC
+              <span class="instrument-fullname">PROMIS Early Childhood parent-report measures</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-generated is-empty">T-scored subscales (≥60 mild, ≥65 moderate, ≥70 severe). Write below.</div>
+            <div class="form-group">
+              <label for="promis-ec-override">Clinical interpretation</label>
+              <textarea id="promis-ec-override" rows="3" data-bind="instruments.promis_ec.override"
+                        autocomplete="off" placeholder="e.g., External Behavior T=68 (moderate), Internal Behavior T=58 (within normal limits)..."></textarea>
+              <span class="form-helper phi-hint">PHI-free — use "the child" or <code>[NAME]</code>.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="instrument-card" data-instrument="promis_pp">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.promis_pp.used" class="instrument-toggle">
+            <span class="instrument-name">PROMIS Parent Proxy
+              <span class="instrument-fullname">PROMIS Pediatric Parent-Proxy measures</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-generated is-empty">T-scored subscales (≥60 mild, ≥65 moderate, ≥70 severe). Write below.</div>
+            <div class="form-group">
+              <label for="promis-pp-override">Clinical interpretation</label>
+              <textarea id="promis-pp-override" rows="3" data-bind="instruments.promis_pp.override"
+                        autocomplete="off" placeholder="e.g., Anxiety T=72 (severe), Depression T=63 (mild), Peer Relationships T=42 (within normal limits)..."></textarea>
+              <span class="form-helper phi-hint">PHI-free — use "the child" or <code>[NAME]</code>.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="instrument-card" data-instrument="promis_ped">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.promis_ped.used" class="instrument-toggle">
+            <span class="instrument-name">PROMIS Pediatric
+              <span class="instrument-fullname">PROMIS Pediatric self-report measures</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-generated is-empty">T-scored subscales (≥60 mild, ≥65 moderate, ≥70 severe). Write below.</div>
+            <div class="form-group">
+              <label for="promis-ped-override">Clinical interpretation</label>
+              <textarea id="promis-ped-override" rows="3" data-bind="instruments.promis_ped.override"
+                        autocomplete="off" placeholder="e.g., Anxiety T=68 (moderate), Depression T=55 (within normal limits)..."></textarea>
               <span class="form-helper phi-hint">PHI-free — use "the child" or <code>[NAME]</code>.</span>
             </div>
           </div>
@@ -1470,14 +2108,57 @@ function defaults() {
       // time (generated from SCORING[key].interpret, edited from
       // override.trim() !== ''). Simpler than persisting and reaches
       // the same behavior as the design decision in branching-logic.md.
-      scq:        { used: false, total: null,        override: '' },
+      scq:        { used: false, total: null,         override: '' },
       vanderbilt: { used: false, inattentive: null, hyperactive: null,
-                    performanceImpairment: false,    override: '' },
-      phq9a:      { used: false, total: null,        override: '' },
-      cars2st:    { used: false, total: null,        override: '' },
+                    performanceImpairment: false,     override: '' },
+      phq9a:      { used: false, total: null,         override: '' },
+      cars2st:    { used: false, total: null,         override: '' },
       dp4:        { used: false, physical: null, adaptive: null,
                     socialEmotional: null, cognitive: null,
-                    communication: null,             override: '' },
+                    communication: null,              override: '' },
+
+      // Autism-specific backfill
+      mchat_rf:   { used: false, total: null,         override: '' },
+      aq10:       { used: false, total: null,         override: '' },
+      assq:       { used: false, total: null,         override: '' },
+      srs2:       { used: false, tscore: null,        override: '' },
+      gars3:      { used: false, autismIndex: null,   override: '' },
+      rita_t:     { used: false, total: null,         override: '' },
+      ados2:      { used: false, comparisonScore: null, override: '' },
+
+      // ADHD backfill
+      snap_iv:    { used: false, inattentiveMean: null, hyperactiveMean: null, override: '' },
+      adhd_rs_iv_preschool: { used: false, percentile: null, override: '' },
+
+      // Anxiety & mood backfill
+      scared:     { used: false, total: null,         override: '' },
+      gad7:       { used: false, total: null,         override: '' },
+      mfq:        { used: false, total: null,         override: '' },
+      mdq:        { used: false, positiveItems: null, q2Concurrent: false,
+                    q3Severity: '',                   override: '' },
+      pas:        { used: false, rawTotal: null,      override: '' },
+      scas:       { used: false, rawTotal: null,      override: '' },
+
+      // Suicide / psychosis screens
+      nih_asq:    { used: false, completed: false,
+                    q1: false, q2: false, q3: false, q4: false,
+                    q5Acute: false,                   override: '' },
+      pq16:       { used: false, total: null,         override: '' },
+
+      // Substance use
+      crafft_n:   { used: false, total: null,         override: '' },
+
+      // Global development & cognitive backfill
+      kbit2r:     { used: false, composite: null,     override: '' },
+      dayc2:      { used: false, generalDevQ: null,   override: '' },
+      asq3:       { used: false, ageBand: '',         override: '' },
+      asq_se2:    { used: false, total: null,         override: '' },
+      swyc:       { used: false,                      override: '' },
+
+      // Behavioral / quality of life
+      promis_ec:  { used: false,                      override: '' },
+      promis_pp:  { used: false,                      override: '' },
+      promis_ped: { used: false,                      override: '' },
     },
     // Other sections (dsm5tr, specifiers, differentials, school, letters)
     // are added as their form sections are implemented. defaults() must
@@ -1707,6 +2388,20 @@ const CITATIONS_PENDING = new Set([
   'scq-rutter-2003',
   'vanderbilt-wolraich-2003',
   'phq-a-johnson-2002',
+  'mchat-robins-2014',
+  'aq10-allison-2012',
+  'assq-ehlers-1999',
+  'scared-birmaher-1999',
+  'gad7-spitzer-2006',
+  'mdq-hirschfeld-2000',
+  'crafft-knight-2002',
+  'snap-iv-swanson-1992',
+  'nih-asq-horowitz-2012',
+  'mfq-angold-1995',
+  'pq16-ising-2012',
+  'rita-t-choueiri-2015',
+  'srs2-constantino-2012',
+  'gars3-gilliam-2014',
 ]);
 
 const SCORING = {
@@ -1782,6 +2477,289 @@ const SCORING = {
     name: 'DP-4',
     fullName: 'Developmental Profile, 4th ed.',
     // No interpret(): judgment-heavy per branching-logic.md.
+  },
+
+  /* ---- Autism-specific (backfill) ---- */
+  mchat_rf: {
+    name: 'M-CHAT-R/F',
+    fullName: 'Modified Checklist for Autism in Toddlers, Revised with Follow-up',
+    cite: 'mchat-robins-2014',
+    interpret(raw) {
+      if (raw.total == null) return null;
+      const t = raw.total;
+      let band, label;
+      if (t <= 2)      { band = 'low';    label = 'low risk (0-2); rescreen at next well-child visit'; }
+      else if (t <= 7) { band = 'medium'; label = 'medium risk (3-7); administer M-CHAT-R/F Follow-up Interview before further action'; }
+      else             { band = 'high';   label = 'high risk (8-20); refer for diagnostic evaluation and early-intervention services'; }
+      return { band, text: 'M-CHAT-R/F total of ' + t + ' indicates ' + label + '.' };
+    },
+  },
+  aq10: {
+    name: 'AQ-10',
+    fullName: 'Short Autism Spectrum Quotient',
+    cite: 'aq10-allison-2012',
+    interpret(raw) {
+      if (raw.total == null) return null;
+      const above = raw.total >= 6;
+      return {
+        band: above ? 'above-threshold' : 'below-threshold',
+        text: 'AQ-10 total of ' + raw.total + ' is ' + (above ? 'at or above' : 'below') + ' the screening threshold (≥6); ' + (above ? 'specialist diagnostic assessment recommended' : 'no autism-specific referral indicated on screening alone') + '.',
+      };
+    },
+  },
+  assq: {
+    name: 'ASSQ (parent)',
+    fullName: 'Autism Spectrum Screening Questionnaire — parent informant',
+    cite: 'assq-ehlers-1999',
+    interpret(raw) {
+      if (raw.total == null) return null;
+      const above = raw.total >= 19;
+      return {
+        band: above ? 'above-threshold' : 'below-threshold',
+        text: 'ASSQ parent total of ' + raw.total + ' is ' + (above ? 'at or above' : 'below') + ' the parent-informant screening cutoff (≥19).',
+      };
+    },
+  },
+  srs2: {
+    name: 'SRS-2',
+    fullName: 'Social Responsiveness Scale, 2nd ed.',
+    cite: 'srs2-constantino-2012',
+    interpret(raw) {
+      if (raw.tscore == null) return null;
+      const t = raw.tscore;
+      let band, label;
+      if (t < 60)       { band = 'normal';   label = 'within normal limits'; }
+      else if (t <= 65) { band = 'mild';     label = 'mild deficiencies in reciprocal social behavior'; }
+      else if (t <= 75) { band = 'moderate'; label = 'moderate deficiencies in reciprocal social behavior'; }
+      else              { band = 'severe';   label = 'severe deficiencies strongly associated with clinical ASD diagnosis'; }
+      return { band, text: 'SRS-2 total T-score of ' + t + ' indicates ' + label + '.' };
+    },
+  },
+  gars3: {
+    name: 'GARS-3',
+    fullName: 'Gilliam Autism Rating Scale, 3rd ed.',
+    cite: 'gars3-gilliam-2014',
+    interpret(raw) {
+      if (raw.autismIndex == null) return null;
+      const a = raw.autismIndex;
+      let band, label;
+      if (a >= 85)      { band = 'very-likely'; label = '"Very likely" probability of autism per GARS-3 categorical bands'; }
+      else if (a >= 71) { band = 'probable';    label = '"Probable" probability of autism'; }
+      else              { band = 'unlikely';    label = '"Unlikely" probability of autism on this measure alone'; }
+      return { band, text: 'GARS-3 Autism Index of ' + a + ': ' + label + '.' };
+    },
+  },
+  rita_t: {
+    name: 'RITA-T',
+    fullName: 'Rapid Interactive Screening Test for Autism in Toddlers',
+    cite: 'rita-t-choueiri-2015',
+    interpret(raw) {
+      if (raw.total == null) return null;
+      const above = raw.total >= 10;
+      return {
+        band: above ? 'above-threshold' : 'below-threshold',
+        text: 'RITA-T total of ' + raw.total + ' is ' + (above ? 'at or above' : 'below') + ' the autism screening cutoff (≥10) in this 18-36 month age range.',
+      };
+    },
+  },
+  ados2: {
+    name: 'ADOS-2',
+    fullName: 'Autism Diagnostic Observation Schedule, 2nd ed.',
+    // No interpret(): module-dependent and judgment-driven.
+  },
+
+  /* ---- ADHD (backfill) ---- */
+  snap_iv: {
+    name: 'SNAP-IV (parent)',
+    fullName: 'Swanson, Nolan, and Pelham IV Rating Scale — parent form',
+    cite: 'snap-iv-swanson-1992',
+    interpret(raw) {
+      const i = raw.inattentiveMean, h = raw.hyperactiveMean;
+      if (i == null && h == null) return null;
+      const iAbove = i != null && i >= 1.78;
+      const hAbove = h != null && h >= 1.44;
+      const parts = [];
+      if (i != null) parts.push('inattentive item mean of ' + i.toFixed(2) + ' is ' + (iAbove ? 'at or above' : 'below') + ' the parent cutoff (≥1.78)');
+      if (h != null) parts.push('hyperactive/impulsive item mean of ' + h.toFixed(2) + ' is ' + (hAbove ? 'at or above' : 'below') + ' the parent cutoff (≥1.44)');
+      return {
+        band: (iAbove || hAbove) ? 'above-threshold' : 'below-threshold',
+        text: 'SNAP-IV parent: ' + parts.join('; ') + '.',
+      };
+    },
+  },
+  adhd_rs_iv_preschool: {
+    name: 'ADHD Rating Scale IV — Preschool',
+    fullName: 'ADHD Rating Scale IV, Preschool Version',
+    // Percentile-based; judgment-heavy.
+  },
+
+  /* ---- Anxiety & mood (backfill) ---- */
+  scared: {
+    name: 'SCARED',
+    fullName: 'Screen for Child Anxiety Related Emotional Disorders',
+    cite: 'scared-birmaher-1999',
+    interpret(raw) {
+      if (raw.total == null) return null;
+      const above = raw.total >= 25;
+      return {
+        band: above ? 'above-threshold' : 'below-threshold',
+        text: 'SCARED total of ' + raw.total + ' is ' + (above ? 'at or above' : 'below') + ' the total-score cutoff (≥25) suggestive of an anxiety disorder. Subscale review is recommended in either direction.',
+      };
+    },
+  },
+  gad7: {
+    name: 'GAD-7',
+    fullName: 'Generalized Anxiety Disorder 7-item scale',
+    cite: 'gad7-spitzer-2006',
+    interpret(raw) {
+      if (raw.total == null) return null;
+      const t = raw.total;
+      let band, label;
+      if      (t <= 4)  { band = 'minimal';  label = 'minimal anxiety symptoms'; }
+      else if (t <= 9)  { band = 'mild';     label = 'mild anxiety symptoms'; }
+      else if (t <= 14) { band = 'moderate'; label = 'moderate anxiety symptoms'; }
+      else              { band = 'severe';   label = 'severe anxiety symptoms'; }
+      return { band, text: 'GAD-7 total of ' + t + ' indicates ' + label + '.' };
+    },
+  },
+  mfq: {
+    name: 'MFQ',
+    fullName: 'Mood and Feelings Questionnaire — short form',
+    cite: 'mfq-angold-1995',
+    interpret(raw) {
+      if (raw.total == null) return null;
+      const above = raw.total >= 12;
+      return {
+        band: above ? 'above-threshold' : 'below-threshold',
+        text: 'MFQ short-form total of ' + raw.total + ' is ' + (above ? 'at or above' : 'below') + ' the screening cutoff (≥12) for depressive symptoms.',
+      };
+    },
+  },
+  mdq: {
+    name: 'MDQ',
+    fullName: 'Mood Disorder Questionnaire',
+    cite: 'mdq-hirschfeld-2000',
+    interpret(raw) {
+      if (raw.positiveItems == null) return null;
+      const itemsAbove   = raw.positiveItems >= 7;
+      const concurrent   = !!raw.q2Concurrent;
+      const impairing    = (raw.q3Severity === 'moderate' || raw.q3Severity === 'serious');
+      const positive     = itemsAbove && concurrent && impairing;
+      let detail = raw.positiveItems + '/13 manic-spectrum items endorsed';
+      detail += '; concurrent timing ' + (concurrent ? 'endorsed' : 'not endorsed');
+      detail += '; functional impairment ' + (impairing ? 'moderate/serious' : 'minimal/none');
+      return {
+        band: positive ? 'positive-screen' : 'negative-screen',
+        text: 'MDQ: ' + detail + '. ' + (positive ? 'Meets all three criteria for a positive bipolar-spectrum screen.' : 'Does not meet the three-part positive screen criteria.') + ' WARY: MDQ was validated in adults; adolescent use requires the Wagner adaptation or careful clinical judgment.',
+      };
+    },
+  },
+  pas: {
+    name: 'PAS',
+    fullName: 'Preschool Anxiety Scale (Spence)',
+    // T-score normative; judgment-heavy.
+  },
+  scas: {
+    name: 'SCAS',
+    fullName: 'Spence Children’s Anxiety Scale',
+    // T-score normative; judgment-heavy.
+  },
+
+  /* ---- Suicide / psychosis screens (backfill) ---- */
+  nih_asq: {
+    name: 'NIH ASQ',
+    fullName: 'Ask Suicide-Screening Questions (NIMH)',
+    cite: 'nih-asq-horowitz-2012',
+    interpret(raw) {
+      // Items 1-4 are non-acute positive triggers; item 5 (acute) is
+      // immediate-risk. We do not assert clinical action — only describe
+      // the screen result. Clinician owns disposition.
+      const anyNonAcute = !!(raw.q1 || raw.q2 || raw.q3 || raw.q4);
+      const acute       = !!raw.q5Acute;
+      if (!anyNonAcute && !acute && !raw.completed) return null;
+      let text;
+      if (acute) {
+        text = 'NIH ASQ: acute positive screen (item 5 endorsed). Immediate safety evaluation indicated.';
+      } else if (anyNonAcute) {
+        text = 'NIH ASQ: non-acute positive screen (at least one of items 1-4 endorsed). Brief Suicide Safety Assessment indicated.';
+      } else {
+        text = 'NIH ASQ: negative screen on all five items.';
+      }
+      return { band: acute ? 'acute' : (anyNonAcute ? 'positive' : 'negative'), text };
+    },
+  },
+  pq16: {
+    name: 'PQ-16',
+    fullName: 'Prodromal Questionnaire-16',
+    cite: 'pq16-ising-2012',
+    interpret(raw) {
+      if (raw.total == null) return null;
+      const above = raw.total >= 6;
+      return {
+        band: above ? 'above-threshold' : 'below-threshold',
+        text: 'PQ-16 total of ' + raw.total + ' endorsed items is ' + (above ? 'at or above' : 'below') + ' the screening cutoff (≥6) for prodromal/ultra-high-risk psychosis features.',
+      };
+    },
+  },
+
+  /* ---- Substance use (backfill) ---- */
+  crafft_n: {
+    name: 'CRAFFT-N',
+    fullName: 'CRAFFT 2.1+N substance and nicotine use screen',
+    cite: 'crafft-knight-2002',
+    interpret(raw) {
+      if (raw.total == null) return null;
+      const above = raw.total >= 2;
+      return {
+        band: above ? 'above-threshold' : 'below-threshold',
+        text: 'CRAFFT-N score of ' + raw.total + ' is ' + (above ? 'at or above' : 'below') + ' the cutoff (≥2) for high-risk substance use warranting brief intervention.',
+      };
+    },
+  },
+
+  /* ---- Global development & cognitive (backfill) ---- */
+  kbit2r: {
+    name: 'KBIT-2R',
+    fullName: 'Kaufman Brief Intelligence Test, 2nd ed. (Renormed)',
+    // Composite IQ requires clinical interpretation; judgment-heavy.
+  },
+  dayc2: {
+    name: 'DAYC-2',
+    fullName: 'Developmental Assessment of Young Children, 2nd ed.',
+    // Domain quotients; judgment-heavy (Early Steps).
+  },
+  asq3: {
+    name: 'ASQ-3',
+    fullName: 'Ages & Stages Questionnaire, 3rd ed.',
+    // Age-band-specific cutoffs across 5 domains; judgment-heavy.
+  },
+  asq_se2: {
+    name: 'ASQ:SE-2',
+    fullName: 'Ages & Stages Questionnaire: Social-Emotional, 2nd ed.',
+    // Age-band-specific cutoff; judgment-heavy.
+  },
+  swyc: {
+    name: 'SWYC',
+    fullName: 'Survey of Well-being of Young Children (all applicable parts)',
+    // Composite of multiple sub-instruments (Milestones, BPSC, PPSC,
+    // POSI, Family Questions); judgment-heavy.
+  },
+
+  /* ---- Behavioral / quality of life (backfill) ---- */
+  promis_ec: {
+    name: 'PROMIS EC',
+    fullName: 'PROMIS Early Childhood parent-report measures',
+    // Multiple T-scored subscales; judgment-heavy.
+  },
+  promis_pp: {
+    name: 'PROMIS Parent Proxy',
+    fullName: 'PROMIS Pediatric Parent-Proxy measures',
+    // Multiple T-scored subscales; judgment-heavy.
+  },
+  promis_ped: {
+    name: 'PROMIS Pediatric',
+    fullName: 'PROMIS Pediatric self-report measures',
+    // Multiple T-scored subscales; judgment-heavy.
   },
 };
 

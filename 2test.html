@@ -373,6 +373,100 @@ input, select, textarea { font-family: inherit; }
   border-radius: 2px;
 }
 
+/* Sub-section heading inside a section body. Used when a single
+   clinical section (History) contains several distinct sub-blocks.
+   Serif so it inherits the document gravitas of section headers,
+   but at body size so it does not compete with them. */
+.subsection {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: var(--sp-6) 0 var(--sp-3);
+  padding-bottom: var(--sp-2);
+  border-bottom: 1px solid var(--rule);
+  letter-spacing: -0.005em;
+}
+.subsection:first-child { margin-top: 0; }
+
+/* Checkbox grid — compact, touch-target-safe, color+text never alone.
+   The 220px minmax prevents two-up cramping on phones while still
+   getting three or four across on desktop without wasted space. */
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--sp-2) var(--sp-3);
+  margin-bottom: var(--sp-3);
+}
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  min-height: 44px;
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--ink);
+  transition: border-color var(--dur-fast) var(--ease-out),
+              background-color var(--dur-fast) var(--ease-out);
+  user-select: none;
+}
+.checkbox-item:hover { border-color: var(--ink-muted); }
+
+/* Custom checkbox — appearance:none lets us paint a check that
+   matches the accent. Native checkbox is hidden but still focusable;
+   focus-visible inherits the global amber outline. */
+.checkbox-item input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  border: 1.5px solid var(--ink-muted);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+  transition: border-color var(--dur-fast) var(--ease-out),
+              background-color var(--dur-fast) var(--ease-out);
+}
+.checkbox-item input[type="checkbox"]:checked {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+.checkbox-item input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 0px;
+  width: 6px;
+  height: 11px;
+  border: solid var(--surface);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+/* WARY: :has() is Chromium 105+ — fine for modern institutional
+   Chromium but older builds will lose the soft amber wrapper tint.
+   The checkbox itself still flips, so the loss is purely aesthetic. */
+.checkbox-item:has(input:checked) {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+/* Two-up form row collapses to one column on phones. */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-3);
+}
+@media (max-width: 767px) {
+  .form-row { grid-template-columns: 1fr; }
+}
+
 /* ============================================================
    PREVIEW PANEL
    ============================================================ */
@@ -684,14 +778,150 @@ input, select, textarea { font-family: inherit; }
       </div>
     </details>
 
+    <!-- =========================================================
+         HISTORY — five clinically-distinct sub-blocks (developmental,
+         medical, family, social, medications) under one section.
+         Establishes the checkbox-grid + subsection patterns and the
+         "non-contributory" rendering default for unchecked groups.
+         ========================================================= -->
+    <details class="section" id="section-history" open>
+      <summary class="section-header">
+        History
+        <span class="phase-chip">in-visit</span>
+      </summary>
+      <div class="section-body">
+
+        <h3 class="subsection">Developmental</h3>
+        <div class="form-group">
+          <label for="dev-motor">Motor milestones</label>
+          <textarea id="dev-motor" rows="2"
+                    data-bind="history.developmental.motor"
+                    autocomplete="off"
+                    placeholder="Sat unsupported, walked, fine motor — ages and any concerns."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="dev-language">Language milestones</label>
+          <textarea id="dev-language" rows="2"
+                    data-bind="history.developmental.language"
+                    autocomplete="off"
+                    placeholder="First words, two-word phrases, current expressive/receptive level."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="dev-social">Social milestones</label>
+          <textarea id="dev-social" rows="2"
+                    data-bind="history.developmental.social"
+                    autocomplete="off"
+                    placeholder="Eye contact, joint attention, social referencing, peer interest."></textarea>
+        </div>
+        <div class="checkbox-grid">
+          <label class="checkbox-item">
+            <input type="checkbox" data-bind="history.developmental.regression">
+            <span>Reported regression</span>
+          </label>
+        </div>
+        <div class="form-group">
+          <label for="dev-regression-detail">Regression detail</label>
+          <textarea id="dev-regression-detail" rows="2"
+                    data-bind="history.developmental.regressionDetail"
+                    autocomplete="off"
+                    placeholder="If regression noted: what skills, when, over what time frame."></textarea>
+          <span class="form-helper phi-hint">PHI-free — use "the child" or <code>[NAME]</code>.</span>
+        </div>
+
+        <h3 class="subsection">Medical</h3>
+        <div class="checkbox-grid">
+          <label class="checkbox-item"><input type="checkbox" data-bind="history.medical.perinatal"><span>Perinatal complications</span></label>
+          <label class="checkbox-item"><input type="checkbox" data-bind="history.medical.seizures"><span>Seizures</span></label>
+          <label class="checkbox-item"><input type="checkbox" data-bind="history.medical.gi"><span>GI issues</span></label>
+          <label class="checkbox-item"><input type="checkbox" data-bind="history.medical.sleep"><span>Sleep concerns</span></label>
+          <label class="checkbox-item"><input type="checkbox" data-bind="history.medical.feeding"><span>Feeding difficulties</span></label>
+        </div>
+        <div class="form-group">
+          <label for="med-other">Other ASD-relevant medical</label>
+          <textarea id="med-other" rows="2"
+                    data-bind="history.medical.otherRelevant"
+                    autocomplete="off"
+                    placeholder="Only items that bear on the ASD evaluation. Full PMH lives in Epic."></textarea>
+          <span class="form-helper phi-hint">PHI-free — use "the child" or <code>[NAME]</code>.</span>
+        </div>
+
+        <h3 class="subsection">Family</h3>
+        <div class="checkbox-grid">
+          <label class="checkbox-item"><input type="checkbox" data-bind="history.family.asd"><span>Autism spectrum disorder</span></label>
+          <label class="checkbox-item"><input type="checkbox" data-bind="history.family.idGdd"><span>Intellectual disability / GDD</span></label>
+          <label class="checkbox-item"><input type="checkbox" data-bind="history.family.adhd"><span>ADHD</span></label>
+          <label class="checkbox-item"><input type="checkbox" data-bind="history.family.psych"><span>Psychiatric illness</span></label>
+          <label class="checkbox-item"><input type="checkbox" data-bind="history.family.geneticSyndrome"><span>Genetic syndrome</span></label>
+        </div>
+        <div class="form-group">
+          <label for="fam-other">Other relevant family history</label>
+          <textarea id="fam-other" rows="2"
+                    data-bind="history.family.otherRelevant"
+                    autocomplete="off"
+                    placeholder="Only items relevant to ASD evaluation or differential."></textarea>
+          <span class="form-helper phi-hint">PHI-free — use relational terms like "older sibling" without names.</span>
+        </div>
+
+        <h3 class="subsection">Social</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="soc-liveswith">Lives with</label>
+            <select id="soc-liveswith" data-bind="history.social.livesWith">
+              <option value="">—</option>
+              <option value="both-parents">Both parents</option>
+              <option value="single-parent">Single parent</option>
+              <option value="extended-family">Extended family</option>
+              <option value="foster-kinship">Foster or kinship</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="soc-setting">Caregiver / school setting</label>
+            <select id="soc-setting" data-bind="history.social.caregiverSetting">
+              <option value="">—</option>
+              <option value="home">Home only</option>
+              <option value="daycare">Daycare</option>
+              <option value="preschool">Preschool</option>
+              <option value="vpk-prek">VPK / Pre-K</option>
+              <option value="elementary">Elementary school</option>
+              <option value="middle">Middle school</option>
+              <option value="high">High school</option>
+              <option value="out-of-school">Out of school</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="soc-language">Primary language at home</label>
+          <input type="text" id="soc-language" data-bind="history.social.primaryLanguage"
+                 autocomplete="off" placeholder="e.g., English, Spanish, ASL">
+        </div>
+
+        <h3 class="subsection">Medications (psychotropic)</h3>
+        <div class="checkbox-grid">
+          <label class="checkbox-item"><input type="checkbox" data-bind="history.medications.onStimulant"><span>Stimulant</span></label>
+          <label class="checkbox-item"><input type="checkbox" data-bind="history.medications.onSsri"><span>SSRI</span></label>
+          <label class="checkbox-item"><input type="checkbox" data-bind="history.medications.onAntipsychotic"><span>Antipsychotic</span></label>
+          <label class="checkbox-item"><input type="checkbox" data-bind="history.medications.onAlpha2"><span>Alpha-2 agonist</span></label>
+        </div>
+        <div class="form-group">
+          <label for="meds-other">Other psychotropic / relevant medications</label>
+          <textarea id="meds-other" rows="2"
+                    data-bind="history.medications.otherRelevant"
+                    autocomplete="off"
+                    placeholder="Categories only (e.g., 'mood stabilizer'). Drug names + doses live in Epic."></textarea>
+        </div>
+
+      </div>
+    </details>
+
     <!-- Placeholder for future sections — kept here as a visual
          reminder that the form will grow. Style intentionally
          restrained so it doesn't compete with the real sections. -->
     <p style="color: var(--ink-faint); font-size: 13px; font-style: italic; padding: var(--sp-4); text-align: center;">
-      Remaining sections (History, Observations, Instruments, DSM-5-TR Criteria,
+      Remaining sections (Observations, Instruments, DSM-5-TR Criteria,
       Specifiers, Differentials, School &amp; Letters) populate here as they
-      are built. Each follows the Demographics / Concerns pattern: state in
-      <code>defaults()</code>, form group with binding, render function extension.
+      are built. Each follows the same pattern: state in <code>defaults()</code>,
+      form group with binding, render function extension.
     </p>
 
   </section>
@@ -771,12 +1001,52 @@ function defaults() {
       onset:           '',
       progression:     '',
     },
-    // Other sections (history, observations, instruments, dsm5tr,
-    // specifiers, differentials, school, letters) are added as their
-    // form sections are implemented. defaults() must always return
-    // the full canonical shape so loaded saves are merged predictably.
-    // Adding optional keys is additive; no schema bump required as
-    // long as the field is allowed to be empty/null on old saves.
+    history: {
+      developmental: {
+        // Milestones flattened from the original architecture.md
+        // {milestones:{...}} stub — three clinically load-bearing
+        // domains (motor / language / social) plus regression.
+        motor:            '',
+        language:         '',
+        social:           '',
+        regression:       false,
+        regressionDetail: '',
+      },
+      medical: {
+        perinatal:        false,
+        seizures:         false,
+        gi:               false,
+        sleep:            false,
+        feeding:          false,
+        otherRelevant:    '',
+      },
+      family: {
+        asd:              false,
+        idGdd:            false,
+        adhd:             false,
+        psych:            false,
+        geneticSyndrome:  false,
+        otherRelevant:    '',
+      },
+      social: {
+        livesWith:        '',
+        primaryLanguage:  '',
+        caregiverSetting: '',
+      },
+      medications: {
+        onStimulant:      false,
+        onSsri:           false,
+        onAntipsychotic:  false,
+        onAlpha2:         false,
+        otherRelevant:    '',
+      },
+    },
+    // Other sections (observations, instruments, dsm5tr, specifiers,
+    // differentials, school, letters) are added as their form sections
+    // are implemented. defaults() must always return the full canonical
+    // shape so loaded saves are merged predictably. Adding optional
+    // keys is additive; no schema bump required as long as the field
+    // is allowed to be empty/null/false on old saves.
   };
 }
 
@@ -813,16 +1083,32 @@ function getByPath(obj, path) {
    BIND — wires inputs to S two-way. Re-runs render on every
    change so the preview is always in sync with state.
    ============================================================ */
+
+/* Single source of truth for "DOM value -> state value" and the
+   reverse direction. Every bound-input read or write goes through
+   these so checkbox vs text vs number handling is consistent
+   across bind(), import, and new-patient flows. */
+function applyBoundValue(el, v) {
+  if (el.type === 'checkbox') el.checked = !!v;
+  else el.value = (v == null) ? '' : v;
+}
+function readBoundValue(el) {
+  if (el.type === 'checkbox') return el.checked;
+  if (el.type === 'number')   return (el.value === '' ? null : Number(el.value));
+  return el.value;
+}
+function clearBoundValue(el) {
+  if (el.type === 'checkbox') el.checked = false;
+  else el.value = '';
+}
+
 function bind() {
   document.querySelectorAll('[data-bind]').forEach(el => {
     const path = el.dataset.bind;
-    const v = getByPath(S, path);
-    if (v !== null && v !== undefined && v !== '') el.value = v;
+    applyBoundValue(el, getByPath(S, path));
 
     const handler = () => {
-      let raw = el.value;
-      if (el.type === 'number') raw = (raw === '' ? null : Number(raw));
-      setByPath(S, path, raw);
+      setByPath(S, path, readBoundValue(el));
       debouncedSave();
       mount();
     };
@@ -998,15 +1284,126 @@ function insurerSentence(cat) {
   }
 }
 
+/* Comma-list of human labels for boolean fields that are true. */
+function checkedList(obj, labelMap) {
+  if (!obj) return [];
+  return Object.entries(labelMap)
+    .filter(([k]) => obj[k] === true)
+    .map(([, label]) => label);
+}
+
+/* Map an enum value through a lookup, falling back to a placeholder.
+   Used for select-driven prose so the renderer doesn't carry switch
+   statements in the middle of sentence construction. */
+function enumOr(value, map, label) {
+  if (value && map[value]) return map[value];
+  return ph(label);
+}
+
+const LIVES_WITH_PROSE = {
+  'both-parents':    'both parents',
+  'single-parent':   'a single parent',
+  'extended-family': 'extended family',
+  'foster-kinship':  'a foster or kinship caregiver',
+  'other':           'an other caregiver arrangement',
+};
+const SETTING_PROSE = {
+  'home':          'at home full-time',
+  'daycare':       'in daycare',
+  'preschool':     'in preschool',
+  'vpk-prek':      'in VPK / Pre-K',
+  'elementary':    'in elementary school',
+  'middle':        'in middle school',
+  'high':          'in high school',
+  'out-of-school': 'currently out of school',
+};
+
 /* renderAP — Assessment & Plan, vertical-slice version.
    Cites: hyman2020 (overall ASD evaluation framing).
-   Sections wired so far: Demographics, Presenting Concerns. */
+   Sections wired so far: Demographics, Concerns, History. */
 function renderAP(s) {
   const d = s.demographics;
   const c = s.concerns || {};
+  const h = s.history || {};
   const age = ageDisplay(d);
   const desc = sexDescriptor(d.sex, d);
   const insurer = insurerSentence(d.insurerCategory);
+
+  // History sub-blocks. Each renders as one paragraph with either
+  // a populated prose body or a clinically-honest "non-contributory" /
+  // "no current medications" default — no bracketed placeholders for
+  // checkbox-driven sections, because "no boxes checked" is itself
+  // valid clinical information.
+  const dev  = h.developmental || {};
+  const med  = h.medical || {};
+  const fam  = h.family || {};
+  const soc  = h.social || {};
+  const meds = h.medications || {};
+
+  const devMotor    = txtOr(dev.motor,    'MOTOR MILESTONES');
+  const devLanguage = txtOr(dev.language, 'LANGUAGE MILESTONES');
+  const devSocial   = txtOr(dev.social,   'SOCIAL MILESTONES');
+  const devRegr = dev.regression
+    ? ' Regression has been reported: ' + txtOr(dev.regressionDetail, 'REGRESSION DETAIL') + '.'
+    : ' No regression reported.';
+
+  const medList = checkedList(med, {
+    perinatal: 'perinatal complications',
+    seizures:  'seizure history',
+    gi:        'GI issues',
+    sleep:     'sleep disturbance',
+    feeding:   'feeding difficulties',
+  });
+  const medOther = (med.otherRelevant || '').trim();
+  let medText;
+  if (medList.length || medOther) {
+    medText = 'Notable for ' + medList.join(', ');
+    if (medOther) medText += (medList.length ? '; also ' : '') + escapeHtml(medOther);
+    medText += '.';
+  } else {
+    medText = 'Non-contributory.';
+  }
+
+  const famList = checkedList(fam, {
+    asd:             'autism spectrum disorder',
+    idGdd:           'intellectual disability or GDD',
+    adhd:            'ADHD',
+    psych:           'psychiatric illness',
+    geneticSyndrome: 'a known genetic syndrome',
+  });
+  const famOther = (fam.otherRelevant || '').trim();
+  let famText;
+  if (famList.length || famOther) {
+    famText = 'Positive for ' + famList.join(', ');
+    if (famOther) famText += (famList.length ? '; ' : '') + escapeHtml(famOther);
+    famText += '.';
+  } else {
+    famText = 'Non-contributory.';
+  }
+
+  const livesWith = enumOr(soc.livesWith, LIVES_WITH_PROSE, 'LIVES WITH');
+  const setting   = enumOr(soc.caregiverSetting, SETTING_PROSE, 'CAREGIVER SETTING');
+  const lang      = (soc.primaryLanguage || '').trim();
+  const langSentence = lang
+    ? ' Primary language in the home is ' + escapeHtml(lang) + '.'
+    : '';
+  const socText = 'The child lives with ' + livesWith + ' and is ' + setting + '.' + langSentence;
+
+  const medsList = checkedList(meds, {
+    onStimulant:     'a stimulant',
+    onSsri:          'an SSRI',
+    onAntipsychotic: 'an antipsychotic',
+    onAlpha2:        'an alpha-2 agonist',
+  });
+  const medsOther = (meds.otherRelevant || '').trim();
+  let medsText;
+  if (medsList.length || medsOther) {
+    medsText = 'Currently taking ' + medsList.join(', ');
+    if (medsOther) medsText += (medsList.length ? '; also ' : '') + escapeHtml(medsOther);
+    medsText += '.';
+  } else {
+    medsText = 'No current psychotropic medications.';
+  }
 
   return [
     '<p><strong>Patient:</strong> ' + ph('PATIENT NAME') + ', DOB ' + ph('DOB') + ', MRN ' + ph('MRN') + '.</p>',
@@ -1015,6 +1412,11 @@ function renderAP(s) {
     '<p><strong>Presenting concerns.</strong> ' + txtOr(c.chief, 'CHIEF CONCERN') + '</p>',
     '<p><strong>Onset.</strong> ' + txtOr(c.onset, 'ONSET') + '</p>',
     '<p><strong>Progression.</strong> ' + txtOr(c.progression, 'PROGRESSION') + '</p>',
+    '<p><strong>Developmental history.</strong> Motor: ' + devMotor + ' Language: ' + devLanguage + ' Social: ' + devSocial + '.' + devRegr + '</p>',
+    '<p><strong>Medical history.</strong> ' + medText + '</p>',
+    '<p><strong>Family history.</strong> ' + famText + '</p>',
+    '<p><strong>Social.</strong> ' + socText + '</p>',
+    '<p><strong>Medications.</strong> ' + medsText + '</p>',
     '<p><em>Additional Assessment &amp; Plan content populates as remaining sections of the documentation form are completed.</em></p>',
   ].join('');
 }
@@ -1124,8 +1526,7 @@ async function executeImport() {
     }
     S = deepMerge(defaults(), loaded);
     document.querySelectorAll('[data-bind]').forEach(el => {
-      const v = getByPath(S, el.dataset.bind);
-      el.value = (v == null) ? '' : v;
+      applyBoundValue(el, getByPath(S, el.dataset.bind));
     });
     save();
     mount();
@@ -1156,7 +1557,7 @@ async function executeNewPatient() {
   S = defaults();
   lastSavedAt = null;
   document.documentElement.style.setProperty('--save-age-pct', 100);
-  document.querySelectorAll('[data-bind]').forEach(el => { el.value = ''; });
+  document.querySelectorAll('[data-bind]').forEach(clearBoundValue);
   try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
   document.getElementById('save-stamp').textContent = 'Not saved';
   mount();

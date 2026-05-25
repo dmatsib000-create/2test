@@ -69,7 +69,8 @@ S = {
   },
 
   history: {
-    developmental:   { milestones: {...}, regression: bool, regressionDetail: <text> },
+    developmental:   { motor: <text>, language: <text>, social: <text>,
+                       regression: bool, regressionDetail: <text> },
     medical:         { perinatal: bool, seizures: bool, gi: bool, sleep: bool,
                        feeding: bool, otherRelevant: <text> },
     family:          { asd: bool, idGdd: bool, adhd: bool, psych: bool,

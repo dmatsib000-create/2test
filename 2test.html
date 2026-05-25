@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2test — Pediatric Autism CDE Documentation</title>
+<style>
+/* ============================================================
+   DESIGN TOKENS — see docs/design-system.md for rationale.
+   13 color tokens, 3 font stacks, 7-step type scale, 4px grid.
+   Anything beyond these tokens is drift; add to the design
+   system doc first, the stylesheet second.
+   ============================================================ */
+:root {
+  --bg:            #FBF8F3;
+  --surface:       #FFFFFF;
+  --surface-sunk:  #F2EEE6;
+  --ink:           #1F1B16;
+  --ink-muted:     #6B6359;
+  --ink-faint:     #A39B8E;
+  --rule:          #E5DFD3;
+  --accent:        #B8730E;
+  --accent-dark:   #935C09;
+  --accent-soft:   #F4E4C8;
+  --critical:      #8B2E1F;
+  --critical-soft: #F3DCD6;
+  --success:       #5A6E3A;
+  --success-soft:  #E2E8D3;
+
+  --font-display: 'Iowan Old Style', 'Hoefler Text', Cambria, Georgia, serif;
+  --font-body:    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono:    'SF Mono', SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+
+  --sp-1: 4px;   --sp-2: 8px;   --sp-3: 12px;  --sp-4: 16px;
+  --sp-5: 20px;  --sp-6: 24px;  --sp-8: 32px;  --sp-12: 48px;  --sp-16: 64px;
+
+  --r-sm: 3px;  --r-md: 6px;  --r-full: 999px;
+
+  --dur-micro: 100ms;
+  --dur-fast:  150ms;
+  --dur-state: 200ms;
+  --ease-out:  cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* Save dot age 0–100; JS writes this every second since last save. */
+  --save-age-pct: 100;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-text-size-adjust: 100%;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+/* Single global focus rule — keyboard users always see it,
+   mouse users never do. No per-component override anywhere. */
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+button { font-family: inherit; cursor: pointer; }
+input, select, textarea { font-family: inherit; }
+
+/* ============================================================
+   APP HEADER
+   ============================================================ */
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  padding: var(--sp-3) var(--sp-5);
+  background: var(--surface);
+  border-bottom: 1px solid var(--rule);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  min-height: 60px;
+}
+.app-header h1 {
+  font-size: 22px;
+  letter-spacing: -0.01em;
+}
+.app-tag {
+  font-family: var(--font-body);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+  margin-left: var(--sp-1);
+}
+
+.save-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.save-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  /* The cooling dot — signature detail #2.
+     Interpolates from amber (fresh save) to faint gray
+     (>30s since save) via --save-age-pct written by JS. */
+  background: color-mix(in srgb,
+    var(--accent) calc((100 - var(--save-age-pct)) * 1%),
+    var(--ink-faint));
+}
+.header-actions {
+  display: flex;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+  min-height: 44px;
+  min-width: 44px;
+  padding: var(--sp-2) var(--sp-4);
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-sm);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transition: border-color var(--dur-fast) var(--ease-out),
+              background-color var(--dur-fast) var(--ease-out);
+}
+.btn:hover { border-color: var(--ink-muted); }
+.btn-primary {
+  background: var(--accent);
+  color: var(--surface);
+  border-color: var(--accent);
+  font-weight: 600;
+}
+.btn-primary:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
+.btn-critical {
+  background: var(--critical);
+  color: var(--surface);
+  border-color: var(--critical);
+  font-weight: 600;
+}
+
+/* ============================================================
+   LAYOUT — three breakpoints, CSS-driven only.
+   Phone: single column. Tablet: single + sticky rail.
+   Desktop: 60fr / 32px gutter / 40fr grid.
+   ============================================================ */
+.app {
+  display: grid;
+  grid-template-columns: 1fr;
+  min-height: calc(100vh - 60px);
+}
+.input-col {
+  grid-column: 1;
+  padding: var(--sp-5);
+  max-width: 720px;
+  margin: 0 auto;
+  width: 100%;
+}
+.preview-col {
+  grid-column: 1;
+  display: none;
+  flex-direction: column;
+  background: var(--surface);
+  border-top: 1px solid var(--rule);
+}
+
+@media (min-width: 1200px) {
+  .app {
+    /* Column 2 (--sp-8) is the protected structural gutter —
+       this width appears nowhere else in the layout. */
+    grid-template-columns: 60fr var(--sp-8) 40fr;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+  .input-col {
+    grid-column: 1;
+    max-width: none;
+  }
+  .preview-col {
+    grid-column: 3;
+    display: flex;
+    border-top: none;
+    border-left: 1px solid var(--rule);
+    position: sticky;
+    top: 60px;
+    height: calc(100vh - 60px);
+  }
+}
+
+/* ============================================================
+   SECTIONS — native <details>/<summary>, no JS.
+   ============================================================ */
+.section {
+  border: 1px solid var(--rule);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  margin-bottom: var(--sp-4);
+  position: relative;
+  overflow: hidden;
+}
+.section-header {
+  list-style: none;
+  padding: var(--sp-3) var(--sp-4);
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  user-select: none;
+}
+.section-header::-webkit-details-marker { display: none; }
+.section-header::before {
+  content: '▸';
+  font-size: 14px;
+  color: var(--ink-muted);
+  transition: transform var(--dur-fast) var(--ease-out);
+  flex-shrink: 0;
+}
+.section[open] > .section-header::before { transform: rotate(90deg); }
+
+.phase-chip {
+  margin-left: auto;
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: var(--surface-sunk);
+  color: var(--ink-muted);
+  padding: 3px 10px;
+  border-radius: var(--r-full);
+  font-weight: 600;
+}
+
+.section-body {
+  padding: var(--sp-5);
+  border-top: 1px solid var(--rule);
+}
+
+/* Lit-section bar — signature detail #1.
+   The "examining light" falling on whichever section
+   the clinician most recently touched. JS toggles .is-lit
+   on focusin within any input. */
+.section.is-lit::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, var(--accent), transparent 90%);
+  pointer-events: none;
+}
+
+/* ============================================================
+   FORM GROUPS
+   ============================================================ */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-5);
+}
+.form-group:last-child { margin-bottom: 0; }
+
+.form-group label {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  min-height: 44px;
+  padding: 10px 12px;
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-sm);
+  font-size: 16px;
+  width: 100%;
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+.form-group input[type="number"] { font-family: var(--font-mono); }
+.form-group input:hover,
+.form-group select:hover,
+.form-group textarea:hover {
+  border-color: var(--ink-muted);
+}
+
+.form-helper {
+  font-size: 13px;
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+}
+.form-helper.phi-hint {
+  color: var(--critical);
+  font-style: italic;
+  font-family: var(--font-body);
+}
+.form-helper code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: var(--critical-soft);
+  padding: 1px 5px;
+  border-radius: 2px;
+}
+
+/* ============================================================
+   PREVIEW PANEL
+   ============================================================ */
+.preview-header {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-5);
+  border-bottom: 1px solid var(--rule);
+  flex-shrink: 0;
+}
+.preview-header h2 {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+  margin: 0;
+}
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+/* Output region — copy-paste critical.
+   No transforms, no user-select restrictions, no fixed width.
+   Anything that prevents clean rich-text paste into Epic is
+   a regression. */
+#output {
+  flex: 1;
+  padding: var(--sp-5);
+  overflow-y: auto;
+  width: 100%;
+  max-width: none;
+  font-family: var(--font-display);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--surface);
+}
+#output p { margin: 0 0 var(--sp-3); }
+#output p:last-child { margin-bottom: 0; }
+#output strong { font-weight: 600; }
+#output em { font-style: italic; color: var(--ink-muted); }
+
+#output .ph {
+  background: var(--accent-soft);
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  font-style: normal;
+  padding: 1px 5px;
+  border-radius: var(--r-sm);
+  color: var(--ink);
+  /* Italic+bracket convention is the colorblind-safe
+     second differentiator; do NOT remove italic from
+     anywhere placeholders appear in display. */
+}
+
+@media print {
+  /* Keep placeholder visibility under background-stripping printers. */
+  #output .ph { border: 1px solid var(--ink-muted); }
+}
+
+/* ============================================================
+   COPY BAR — sticky bottom of preview
+   ============================================================ */
+.copy-bar {
+  position: sticky;
+  bottom: 0;
+  background: var(--surface);
+  border-top: 2px solid var(--rule);
+  padding: var(--sp-3) var(--sp-4);
+  display: flex;
+  gap: var(--sp-3);
+  align-items: center;
+  flex-shrink: 0;
+}
+.copy-btn {
+  min-height: 44px;
+  min-width: 44px;
+  padding: var(--sp-2) var(--sp-5);
+  background: var(--accent);
+  color: var(--surface);
+  border: none;
+  border-radius: var(--r-sm);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  position: relative;
+  overflow: hidden;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+.copy-btn:hover { background: var(--accent-dark); }
+/* Success-fill after copy. Rises from below, dwells, releases. */
+.copy-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--success);
+  transform: translateY(100%);
+  transition: transform 600ms var(--ease-out);
+  z-index: 0;
+}
+.copy-btn.is-copied::after { transform: translateY(0); }
+.copy-btn > span { position: relative; z-index: 1; }
+
+.copy-status {
+  font-size: 13px;
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+}
+
+/* ============================================================
+   MODAL — CSS-toggled wrapper; native <dialog> avoided due to
+   institutional Chromium backdrop inconsistency.
+   ============================================================ */
+.modal-wrapper {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-4);
+}
+.modal-wrapper.is-open { display: flex; }
+.modal-wrapper::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: rgba(31, 27, 22, 0.55);
+}
+.modal {
+  position: relative;
+  background: var(--surface);
+  border-radius: var(--r-md);
+  padding: var(--sp-6);
+  max-width: 520px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(31, 27, 22, 0.22);
+}
+.modal-title {
+  margin: 0 0 var(--sp-3);
+  font-size: 22px;
+}
+.modal p { margin: 0 0 var(--sp-3); color: var(--ink-muted); }
+.modal textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: var(--sp-2) var(--sp-3);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-sm);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  resize: vertical;
+}
+.modal-footer {
+  margin-top: var(--sp-5);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--sp-3);
+}
+
+/* ============================================================
+   MOTION GUARD — every animated property collapses here.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print {
+  .app-header, .copy-bar, .header-actions, .modal-wrapper,
+  .preview-header, .section-header { display: none; }
+  .section { border: none; }
+  .input-col, .preview-col { display: block; padding: 0; }
+  body { background: white; }
+}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <h1>2test <span class="app-tag">Autism CDE</span></h1>
+
+  <div class="save-status" title="Time since last auto-save">
+    <span class="save-dot" id="save-dot" aria-hidden="true"></span>
+    <span id="save-stamp">Not saved</span>
+  </div>
+
+  <div class="header-actions">
+    <button class="btn" onclick="exportSession()">Export</button>
+    <button class="btn" onclick="openModal('import-modal')">Import</button>
+    <button class="btn" onclick="openModal('new-patient-modal')">New patient</button>
+  </div>
+</header>
+
+<main class="app">
+
+  <section class="input-col" aria-label="Documentation intake">
+
+    <!-- =========================================================
+         DEMOGRAPHICS — first vertical-slice section.
+         Exercises: number input, select input, two-way binding,
+         debounced save, render pipeline, lit-section detection,
+         session-string round-trip. Remaining sections will follow
+         the same pattern.
+         ========================================================= -->
+    <details class="section" id="section-demographics" open>
+      <summary class="section-header">
+        Demographics
+        <span class="phase-chip">pre-visit</span>
+      </summary>
+      <div class="section-body">
+
+        <div class="form-group">
+          <label for="age-months">Age (months)</label>
+          <input type="number" id="age-months" min="12" max="264" step="1"
+                 inputmode="numeric" data-bind="demographics.ageMonths"
+                 autocomplete="off">
+          <span class="form-helper" id="age-display"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="sex">Sex</label>
+          <select id="sex" data-bind="demographics.sex">
+            <option value="">—</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="intersex">Intersex</option>
+            <option value="unspecified">Unspecified</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="insurer">Insurer category</label>
+          <select id="insurer" data-bind="demographics.insurerCategory">
+            <option value="">—</option>
+            <option value="commercial">Commercial</option>
+            <option value="medicaid">Medicaid</option>
+            <option value="tricare-champva">TRICARE / ChampVA</option>
+          </select>
+        </div>
+
+      </div>
+    </details>
+
+    <!-- Placeholder for future sections — kept here as a visual
+         reminder that the form will grow. Style intentionally
+         restrained so it doesn't compete with the real section. -->
+    <p style="color: var(--ink-faint); font-size: 13px; font-style: italic; padding: var(--sp-4); text-align: center;">
+      Additional sections (Concerns, History, Observations, Instruments,
+      DSM-5-TR Criteria, Specifiers, Differentials, Letters) populate here
+      as they are built. Vertical slice committed first to prove the
+      state → render → copy → save round-trip end-to-end.
+    </p>
+
+  </section>
+
+  <aside class="preview-col" aria-label="Live preview of generated note">
+    <header class="preview-header">
+      <span class="live-dot" aria-hidden="true"></span>
+      <h2>A&amp;P preview</h2>
+    </header>
+    <div id="output" role="region" aria-label="Generated assessment and plan, live">
+      <!-- Rendered by renderAP(S) on every state change. -->
+    </div>
+    <div class="copy-bar">
+      <button class="copy-btn" onclick="copyOutput()">
+        <span>Copy A&amp;P</span>
+      </button>
+      <span class="copy-status" id="copy-status" aria-live="polite"></span>
+    </div>
+  </aside>
+
+</main>
+
+<!-- ===========================================================
+     MODALS — focus-trapped, Escape-closeable, return focus to
+     trigger on close. Per /clinical-html-ui Pattern #6.
+     =========================================================== -->
+<div id="new-patient-modal" class="modal-wrapper" role="none">
+  <div class="modal" role="dialog" aria-modal="true"
+       aria-labelledby="np-title" tabindex="-1">
+    <h2 id="np-title" class="modal-title">Start a new patient?</h2>
+    <p>This clears all current data from the form and from local storage. Before clearing, you'll be offered an export string so the current session is recoverable.</p>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('new-patient-modal')">Cancel</button>
+      <button class="btn btn-critical" onclick="executeNewPatient()">Clear and start new</button>
+    </div>
+  </div>
+</div>
+
+<div id="import-modal" class="modal-wrapper" role="none">
+  <div class="modal" role="dialog" aria-modal="true"
+       aria-labelledby="im-title" tabindex="-1">
+    <h2 id="im-title" class="modal-title">Import session string</h2>
+    <p>Paste a previously-exported string. Format: <code>2test:v1:…</code> or <code>2test:v1u:…</code></p>
+    <textarea id="import-input" placeholder="2test:v1:…"></textarea>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('import-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="executeImport()">Import</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+/* ============================================================
+   SCHEMA — version bumps require a migration function below.
+   Bumping without migrating will refuse to load older saves.
+   ============================================================ */
+const SCHEMA = 1;
+const STORAGE_KEY = '2test:session:current';
+
+function defaults() {
+  return {
+    meta: {
+      schemaVersion: SCHEMA,
+      sessionId:     uuid(),
+      savedAt:       null,
+    },
+    demographics: {
+      ageMonths:       null,
+      sex:             '',
+      insurerCategory: '',
+    },
+    // Other sections (concerns, history, observations, instruments,
+    // dsm5tr, specifiers, differentials, letters) are added as their
+    // form sections are implemented. defaults() must always return
+    // the full canonical shape so loaded saves are merged predictably.
+  };
+}
+
+let S = defaults();
+let lastSavedAt = null;
+
+function uuid() {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
+  // WARY: weak fallback for environments without crypto.randomUUID — fine
+  // for sessionId since it's not security-sensitive (no auth in this app).
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = Math.random() * 16 | 0;
+    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+  });
+}
+
+/* ============================================================
+   PATH HELPERS — for data-bind attributes like "demographics.sex".
+   ============================================================ */
+function setByPath(obj, path, val) {
+  const keys = path.split('.');
+  let o = obj;
+  for (let i = 0; i < keys.length - 1; i++) {
+    if (typeof o[keys[i]] !== 'object' || o[keys[i]] === null) o[keys[i]] = {};
+    o = o[keys[i]];
+  }
+  o[keys[keys.length - 1]] = val;
+}
+function getByPath(obj, path) {
+  return path.split('.').reduce((o, k) => (o == null ? o : o[k]), obj);
+}
+
+/* ============================================================
+   BIND — wires inputs to S two-way. Re-runs render on every
+   change so the preview is always in sync with state.
+   ============================================================ */
+function bind() {
+  document.querySelectorAll('[data-bind]').forEach(el => {
+    const path = el.dataset.bind;
+    const v = getByPath(S, path);
+    if (v !== null && v !== undefined && v !== '') el.value = v;
+
+    const handler = () => {
+      let raw = el.value;
+      if (el.type === 'number') raw = (raw === '' ? null : Number(raw));
+      setByPath(S, path, raw);
+      debouncedSave();
+      mount();
+    };
+    el.addEventListener('input', handler);
+    el.addEventListener('change', handler);
+  });
+}
+
+/* ============================================================
+   PERSISTENCE — localStorage, debounced ~400ms.
+   PHI-free state by design (see branching-logic.md), so this
+   carries no patient-identifying data even if localStorage leaks.
+   ============================================================ */
+let saveTimer;
+function debouncedSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(save, 400);
+}
+function save() {
+  S.meta.savedAt = new Date().toISOString();
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(S));
+    lastSavedAt = Date.now();
+    tickSaveAge();
+  } catch (e) {
+    // WARY: localStorage can be full or disabled (private mode).
+    // Surface to status; do not throw — the form must keep working.
+    document.getElementById('save-stamp').textContent = 'Save failed';
+  }
+}
+function loadFromStorage() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const loaded = JSON.parse(raw);
+    if (loaded && loaded.meta && loaded.meta.schemaVersion === SCHEMA) {
+      S = deepMerge(defaults(), loaded);
+      if (loaded.meta.savedAt) lastSavedAt = new Date(loaded.meta.savedAt).getTime();
+    }
+  } catch (e) {
+    // Corrupt storage — leave defaults in place rather than crash.
+  }
+}
+function deepMerge(base, overlay) {
+  const out = Array.isArray(base) ? base.slice() : Object.assign({}, base);
+  for (const k of Object.keys(overlay || {})) {
+    if (overlay[k] && typeof overlay[k] === 'object' && !Array.isArray(overlay[k])
+        && base[k] && typeof base[k] === 'object') {
+      out[k] = deepMerge(base[k], overlay[k]);
+    } else {
+      out[k] = overlay[k];
+    }
+  }
+  return out;
+}
+
+/* ============================================================
+   SESSION STRING CODEC — "2test:v1:<gzip+base64>" preferred,
+   "2test:v1u:<base64>" fallback when CompressionStream missing.
+   Schema-version-prefixed so future migrations can target.
+   ============================================================ */
+async function gzipB64(str) {
+  const bytes = new TextEncoder().encode(str);
+  const stream = new Blob([bytes]).stream().pipeThrough(new CompressionStream('gzip'));
+  const compressed = new Uint8Array(await new Response(stream).arrayBuffer());
+  let bin = '';
+  for (const b of compressed) bin += String.fromCharCode(b);
+  return btoa(bin);
+}
+async function ungzipB64(b64) {
+  const bin = atob(b64);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+  const buf = await new Response(stream).arrayBuffer();
+  return new TextDecoder().decode(buf);
+}
+async function encodeSession(s) {
+  const json = JSON.stringify(s);
+  if (typeof CompressionStream !== 'undefined') {
+    try { return '2test:v1:' + await gzipB64(json); } catch (e) { /* fall through */ }
+  }
+  // Uncompressed fallback — base64 of UTF-8 JSON.
+  return '2test:v1u:' + btoa(unescape(encodeURIComponent(json)));
+}
+async function decodeSession(str) {
+  str = str.trim();
+  if (str.startsWith('2test:v1:'))  return JSON.parse(await ungzipB64(str.slice(9)));
+  if (str.startsWith('2test:v1u:')) return JSON.parse(decodeURIComponent(escape(atob(str.slice(10)))));
+  throw new Error('Unrecognized session-string format. Expected "2test:v1:…" or "2test:v1u:…".');
+}
+
+/* ============================================================
+   RENDER — pure functions, state → Epic-safe HTML.
+   Only <p> <strong> <em> <ul> <li> <br> <mark> are allowed in
+   the output region (Epic-paste safe; tested patterns).
+   Every renderer carries the references.md keys it cites.
+   ============================================================ */
+function ph(label) { return '<mark class="ph">[' + label + ']</mark>'; }
+
+function ageDisplay(months) {
+  if (months == null || months === '') return ph('AGE');
+  if (months < 36) return months + '-month-old';
+  return Math.floor(months / 12) + '-year-old';
+}
+function sexDescriptor(sex, months) {
+  // For descriptor only — "boy/girl" under 12y, "male/female adolescent" 12y+.
+  // Falls back to "child" / "patient" when sex is unspecified.
+  const ageY = (months != null && months !== '') ? Math.floor(months / 12) : null;
+  if (!sex || sex === 'intersex' || sex === 'unspecified') {
+    return (ageY != null && ageY >= 12) ? 'adolescent' : 'child';
+  }
+  if (ageY != null && ageY >= 12) return (sex === 'male' ? 'male adolescent' : 'female adolescent');
+  return (sex === 'male' ? 'boy' : 'girl');
+}
+function insurerSentence(cat) {
+  switch (cat) {
+    case 'commercial':       return 'Commercial insurance.';
+    case 'medicaid':         return 'Florida Medicaid.';
+    case 'tricare-champva':  return 'TRICARE / ChampVA.';
+    default:                 return ph('INSURER CATEGORY') + '.';
+  }
+}
+
+/* renderAP — Assessment & Plan, vertical-slice version.
+   Cites: hyman2020 (overall ASD evaluation framing). */
+function renderAP(s) {
+  const d = s.demographics;
+  const age = ageDisplay(d.ageMonths);
+  const desc = sexDescriptor(d.sex, d.ageMonths);
+  const insurer = insurerSentence(d.insurerCategory);
+
+  return [
+    '<p><strong>Patient:</strong> ' + ph('PATIENT NAME') + ', DOB ' + ph('DOB') + ', MRN ' + ph('MRN') + '.</p>',
+    '<p><strong>Date of evaluation:</strong> ' + ph('EVALUATION DATE') + '. <strong>Insurance:</strong> ' + insurer + '</p>',
+    '<p><strong>Assessment.</strong> ' + ph('PATIENT NAME') + ' is a ' + age + ' ' + desc + ' presenting for comprehensive diagnostic evaluation of suspected autism spectrum disorder.</p>',
+    '<p><em>Additional Assessment &amp; Plan content populates as remaining sections of the documentation form are completed.</em></p>',
+  ].join('');
+}
+
+function mount() {
+  document.getElementById('output').innerHTML = renderAP(S);
+  updateAgeHelper();
+}
+function updateAgeHelper() {
+  const el = document.getElementById('age-display');
+  if (!el) return;
+  const m = S.demographics.ageMonths;
+  if (m == null || m === '') { el.textContent = ''; return; }
+  if (m < 36) { el.textContent = m + ' months'; return; }
+  const y = Math.floor(m / 12), rem = m % 12;
+  el.textContent = (rem === 0) ? (y + ' years') : (y + ' years ' + rem + ' months');
+}
+
+/* ============================================================
+   COPY — rich text + plain text via Clipboard API.
+   document.execCommand is intentionally NOT used (deprecated,
+   inconsistent across institutional Chromium).
+   ============================================================ */
+async function copyOutput() {
+  const output = document.getElementById('output');
+  const html = output.innerHTML;
+  const text = output.innerText;
+  const btn = document.querySelector('.copy-btn');
+  const status = document.getElementById('copy-status');
+  try {
+    if (typeof ClipboardItem !== 'undefined' && navigator.clipboard && navigator.clipboard.write) {
+      await navigator.clipboard.write([new ClipboardItem({
+        'text/html':  new Blob([html], { type: 'text/html' }),
+        'text/plain': new Blob([text], { type: 'text/plain' }),
+      })]);
+    } else {
+      await navigator.clipboard.writeText(text);
+    }
+    btn.classList.add('is-copied');
+    status.textContent = 'Copied — paste into Epic';
+    setTimeout(() => {
+      btn.classList.remove('is-copied');
+      status.textContent = '';
+    }, 1400);
+  } catch (e) {
+    status.textContent = 'Copy failed — select manually';
+  }
+}
+
+/* ============================================================
+   MODAL — focus trap, Escape, return focus on close.
+   ============================================================ */
+let _lastFocus = null;
+function openModal(id) {
+  _lastFocus = document.activeElement;
+  const w = document.getElementById(id);
+  w.classList.add('is-open');
+  const m = w.querySelector('[role="dialog"]');
+  if (m) m.focus();
+  document.addEventListener('keydown', handleModalKey);
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('is-open');
+  document.removeEventListener('keydown', handleModalKey);
+  if (_lastFocus) try { _lastFocus.focus(); } catch (e) {}
+}
+function handleModalKey(e) {
+  const open = document.querySelector('.modal-wrapper.is-open');
+  if (!open) return;
+  if (e.key === 'Escape') { closeModal(open.id); return; }
+  if (e.key !== 'Tab') return;
+  const focusable = open.querySelectorAll('a,button,input,select,textarea,[tabindex]:not([tabindex="-1"])');
+  if (!focusable.length) return;
+  const first = focusable[0], last = focusable[focusable.length - 1];
+  if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+}
+
+/* ============================================================
+   EXPORT / IMPORT
+   ============================================================ */
+async function exportSession() {
+  try {
+    const str = await encodeSession(S);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(str);
+      document.getElementById('save-stamp').textContent = 'Export copied';
+    } else {
+      // Fallback: open a prompt the clinician copies manually.
+      window.prompt('Copy this session string:', str);
+    }
+  } catch (e) {
+    alert('Export failed: ' + e.message);
+  }
+}
+async function executeImport() {
+  const str = document.getElementById('import-input').value.trim();
+  if (!str) return;
+  try {
+    const loaded = await decodeSession(str);
+    if (!loaded || !loaded.meta || loaded.meta.schemaVersion !== SCHEMA) {
+      alert('Schema version mismatch — this string was created in a different version of 2test.');
+      return;
+    }
+    S = deepMerge(defaults(), loaded);
+    document.querySelectorAll('[data-bind]').forEach(el => {
+      const v = getByPath(S, el.dataset.bind);
+      el.value = (v == null) ? '' : v;
+    });
+    save();
+    mount();
+    document.getElementById('import-input').value = '';
+    closeModal('import-modal');
+  } catch (e) {
+    alert('Import failed: ' + e.message);
+  }
+}
+
+/* ============================================================
+   NEW PATIENT — clears state + storage after offering export.
+   ============================================================ */
+async function executeNewPatient() {
+  // Offer export first — accidental clears are the worst kind.
+  try {
+    const str = await encodeSession(S);
+    const proceed = confirm(
+      'Before clearing, the current session string has been copied to your clipboard so you can recover it if needed.\n\n' +
+      'OK = clear and continue.  Cancel = abort.'
+    );
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(str);
+    }
+    if (!proceed) { closeModal('new-patient-modal'); return; }
+  } catch (e) { /* proceed with clear even if export fails */ }
+
+  S = defaults();
+  lastSavedAt = null;
+  document.documentElement.style.setProperty('--save-age-pct', 100);
+  document.querySelectorAll('[data-bind]').forEach(el => { el.value = ''; });
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+  document.getElementById('save-stamp').textContent = 'Not saved';
+  mount();
+  closeModal('new-patient-modal');
+}
+
+/* ============================================================
+   SAVE-AGE TICKER — drives the cooling-dot signature detail.
+   --save-age-pct goes 0 (just saved, full amber) → 100
+   (>= 30s since save, faint gray) on a 1-second tick.
+   ============================================================ */
+function tickSaveAge() {
+  const el = document.getElementById('save-stamp');
+  if (!el) return;
+  if (!lastSavedAt) {
+    el.textContent = 'Not saved';
+    document.documentElement.style.setProperty('--save-age-pct', 100);
+    return;
+  }
+  const ageSec = (Date.now() - lastSavedAt) / 1000;
+  el.textContent = 'Saved ' + formatAge(ageSec);
+  const pct = Math.min(100, (ageSec / 30) * 100);
+  document.documentElement.style.setProperty('--save-age-pct', pct);
+}
+function formatAge(sec) {
+  if (sec < 60)    return Math.floor(sec) + 's ago';
+  if (sec < 3600)  return Math.floor(sec / 60) + 'm ago';
+  return Math.floor(sec / 3600) + 'h ago';
+}
+
+/* ============================================================
+   LIT-SECTION TRACKING — signature detail #1.
+   Updates which section gets the amber-bar treatment based
+   on focus. Preserves last-lit when focus moves outside any
+   section (so the preview pane doesn't unlight the form).
+   ============================================================ */
+document.addEventListener('focusin', e => {
+  const section = e.target.closest('details.section');
+  if (!section) return;
+  document.querySelectorAll('details.section.is-lit').forEach(s => s.classList.remove('is-lit'));
+  section.classList.add('is-lit');
+});
+
+/* ============================================================
+   INIT
+   ============================================================ */
+function init() {
+  loadFromStorage();
+  bind();
+  mount();
+  tickSaveAge();
+  setInterval(tickSaveAge, 1000);
+}
+init();
+</script>
+</body>
+</html>

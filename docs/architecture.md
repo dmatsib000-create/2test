@@ -12,6 +12,10 @@ System font stack only: `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, 
 
 ---
 
+## Visual design system
+
+See [`docs/design-system.md`](design-system.md) for the full visual contract: the *Examining Light* philosophy, the color/type/spacing/motion tokens, the layout breakpoints, the component rules, and the two signature details (lit-section bar and cooling save dot). That file is the authority for everything inside `<style>` in `2test.html`. Update it in the same commit as any token change.
+
 ## File layout in the repo
 
 ```
@@ -20,6 +24,7 @@ docs/
   references.md         ← bibliography + verification ledger
   branching-logic.md    ← council decisions, reversals, residuals
   architecture.md       ← this file
+  design-system.md      ← visual tokens, philosophy, component rules
 CHANGELOG.md            ← human-readable why-not-what entries (added when first feature ships)
 README.md               ← clinician-facing usage instructions
 ```

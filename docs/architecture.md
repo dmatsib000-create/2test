@@ -91,14 +91,21 @@ S = {
   },
 
   instruments: {
-    // Each slot follows the same shape:
-    // {
-    //   used: bool,
-    //   raw: <number | structured object>,
-    //   generated: <string | null>,       // auto-interp output (null if judgment-heavy)
-    //   override: <string | null>,         // clinician's edited text
-    //   edited: bool                       // true if override differs from generated
-    // }
+    // Per slot, persisted fields are: used (bool), the raw score
+    // fields (flattened directly into the slot -- no nested raw:{}
+    // object), and override (string).
+    // NOT persisted -- derived at render time from the SCORING engine:
+    //   generated  : output of SCORING[key].interpret(slot) or null
+    //   edited     : (override.trim() !== '')
+    // Judgment-heavy instruments have no interpret() in SCORING; their
+    // override field carries all the rendered prose. Per branching-logic.md
+    // "Instrument interpretation strategy" Residual (simplified).
+    // Examples of concrete slot shapes shipped in the first slice:
+    //   scq:        { used, total, override }
+    //   vanderbilt: { used, inattentive, hyperactive, performanceImpairment, override }
+    //   phq9a:      { used, total, override }
+    //   cars2st:    { used, total, override }         // judgment-heavy
+    //   dp4:        { used, physical, adaptive, socialEmotional, cognitive, communication, override }  // judgment-heavy
     scq:         {...},
     mchat_rf:    {...},
     swyc:        {...},

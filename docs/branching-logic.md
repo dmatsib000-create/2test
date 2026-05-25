@@ -35,6 +35,10 @@ Convention for reversals: append a block immediately under the original entry of
 
 **Residual:** the editable-with-flag pattern preserves clinician authority but adds state-shape complexity (every auto-interp slot needs `{raw, generated, override, edited}`). Worth the complexity.
 
+> **Refinement 2026-05-25** — at implementation time, the slot shape was simplified to `{used, ...raw fields, override}`. `generated` is computed fresh on every render from `SCORING[key].interpret(slot)`, and `edited` is derived as `override.trim() !== ''`. Same observable behavior (clinician override + "edited" badge), smaller persisted state, no synchronization between persisted `generated` and the live function. Not a reversal — just a smaller realization of the same decision. Adds a new fork the documentation should track:
+>
+> **Citation verification posture (Instruments).** Auto-interpretations cite keys in `references.md`. Until the verification ledger row for a cite is marked `verified`, the rendered prose in the preview carries a `[citation pending]` tag (class `.cite-pending .meta-tag`). The copy-to-Epic path strips all `.meta-tag` elements, so unverified-provenance markers never ship into the chart. The clinician still owns verification responsibility per the project's clinical-content-authority rule; the tag is a visible reminder, not a hard gate.
+
 ---
 
 ## 2026-05-25 · Persistence model

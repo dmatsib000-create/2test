@@ -468,6 +468,132 @@ input, select, textarea { font-family: inherit; }
 }
 
 /* ============================================================
+   INSTRUMENT CARDS — one card per instrument. Collapsed state
+   shows only the "Used" toggle; expanded reveals the scoring
+   inputs, generated readout, and override field.
+   ============================================================ */
+.instrument-card {
+  border: 1px solid var(--rule);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  margin-bottom: var(--sp-3);
+  overflow: hidden;
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+.instrument-card.is-used { border-color: var(--accent); }
+
+.instrument-header {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  cursor: pointer;
+  user-select: none;
+}
+.instrument-card.is-used .instrument-header { background: var(--accent-soft); }
+
+.instrument-name {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.instrument-fullname {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-muted);
+  font-weight: 400;
+  margin-left: var(--sp-2);
+}
+
+.instrument-body {
+  display: none;
+  padding: var(--sp-4);
+  border-top: 1px solid var(--rule);
+}
+.instrument-card.is-used .instrument-body { display: block; }
+
+.instrument-inputs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-4);
+}
+.instrument-inputs .form-group { margin-bottom: 0; }
+.instrument-inputs input[type="number"] {
+  font-family: var(--font-mono);
+  font-size: 15px;
+}
+
+/* Generated auto-interp readout — read-only, light surface,
+   serif so it visually echoes the preview prose. */
+.instrument-generated {
+  background: var(--surface-sunk);
+  border-left: 3px solid var(--accent);
+  padding: var(--sp-3) var(--sp-4);
+  font-family: var(--font-display);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink);
+  margin-bottom: var(--sp-3);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+}
+.instrument-generated.is-empty {
+  color: var(--ink-faint);
+  font-style: italic;
+  border-left-color: var(--rule);
+}
+
+/* "Citation pending verification" badge — preview-only signal
+   for clinical claims whose source citation has not yet been
+   verified in references.md. WARY: copyOutput() strips elements
+   carrying class .meta-tag so this never ships into Epic. */
+.cite-pending {
+  display: inline-block;
+  margin-left: var(--sp-2);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: var(--critical-soft);
+  color: var(--critical);
+  padding: 1px 6px;
+  border-radius: var(--r-sm);
+  vertical-align: middle;
+  font-style: normal;
+}
+
+.edit-badge {
+  display: inline-block;
+  margin-left: var(--sp-2);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+  padding: 1px 6px;
+  border-radius: var(--r-sm);
+  vertical-align: middle;
+  font-style: normal;
+}
+
+/* ============================================================
+   INSTRUMENT GROUP HEADER — finer than .subsection, used inside
+   the Instruments section to group cards by clinical domain.
+   ============================================================ */
+.instrument-group {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin: var(--sp-5) 0 var(--sp-2);
+}
+.instrument-group:first-child { margin-top: 0; }
+
+/* ============================================================
    PREVIEW PANEL
    ============================================================ */
 .preview-header {
@@ -979,14 +1105,238 @@ input, select, textarea { font-family: inherit; }
       </div>
     </details>
 
+    <!-- =========================================================
+         INSTRUMENTS — hybrid auto-interpretation engine.
+         Deterministic-cutoff instruments (SCQ, Vanderbilt, PHQ-9A)
+         carry an interpret() function in SCORING that produces
+         cited prose from raw scores; judgment-heavy instruments
+         (CARS-2-ST, DP-4) accept raw entry only and the clinician
+         writes prose in the override field. Per branching-logic.md
+         "Instrument interpretation strategy" (hybrid decision).
+         Citations whose references.md ledger row is still
+         "pending" render with a [CITATION PENDING] tag in the
+         preview only -- copyOutput() strips .cite-pending tags
+         so unverified provenance never ships to Epic.
+         ========================================================= -->
+    <details class="section" id="section-instruments" open>
+      <summary class="section-header">
+        Instruments
+        <span class="phase-chip">mixed</span>
+      </summary>
+      <div class="section-body">
+
+        <h4 class="instrument-group">Autism-specific</h4>
+
+        <div class="instrument-card" data-instrument="scq">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.scq.used"
+                   class="instrument-toggle">
+            <span class="instrument-name">SCQ
+              <span class="instrument-fullname">Social Communication Questionnaire</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-inputs">
+              <div class="form-group">
+                <label for="scq-total">Total score (0–39)</label>
+                <input type="number" id="scq-total" min="0" max="39" step="1"
+                       inputmode="numeric"
+                       data-bind="instruments.scq.total"
+                       autocomplete="off" placeholder="0–39">
+              </div>
+            </div>
+            <div class="instrument-generated" data-generated-for="scq">
+              Enter a total score to see auto-interpretation.
+            </div>
+            <div class="form-group">
+              <label for="scq-override">Override (optional)</label>
+              <textarea id="scq-override" rows="2"
+                        data-bind="instruments.scq.override"
+                        autocomplete="off"
+                        placeholder="Leave blank to use the auto-interpretation above. Type here to replace it."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="instrument-card" data-instrument="cars2st">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.cars2st.used"
+                   class="instrument-toggle">
+            <span class="instrument-name">CARS-2-ST
+              <span class="instrument-fullname">Childhood Autism Rating Scale, 2nd ed. — Standard form</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-inputs">
+              <div class="form-group">
+                <label for="cars2st-total">Total raw score</label>
+                <input type="number" id="cars2st-total" min="15" max="60" step="0.5"
+                       inputmode="decimal"
+                       data-bind="instruments.cars2st.total"
+                       autocomplete="off" placeholder="15.0–60.0">
+              </div>
+            </div>
+            <div class="instrument-generated is-empty">
+              CARS-2-ST severity interpretation is judgment-driven (per branching-logic.md). Enter raw score and write interpretation below.
+            </div>
+            <div class="form-group">
+              <label for="cars2st-override">Clinical interpretation</label>
+              <textarea id="cars2st-override" rows="3"
+                        data-bind="instruments.cars2st.override"
+                        autocomplete="off"
+                        placeholder="e.g., Score of 32 falls in the minimal-to-no symptoms range, but observed behavior was inconsistent with..."></textarea>
+              <span class="form-helper phi-hint">PHI-free — use "the child" or <code>[NAME]</code>.</span>
+            </div>
+          </div>
+        </div>
+
+        <h4 class="instrument-group">ADHD</h4>
+
+        <div class="instrument-card" data-instrument="vanderbilt">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.vanderbilt.used"
+                   class="instrument-toggle">
+            <span class="instrument-name">Vanderbilt Parent
+              <span class="instrument-fullname">NICHQ Vanderbilt Assessment, parent informant</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-inputs">
+              <div class="form-group">
+                <label for="vand-inatt">Inattentive symptoms ≥2 (0–9)</label>
+                <input type="number" id="vand-inatt" min="0" max="9" step="1"
+                       inputmode="numeric"
+                       data-bind="instruments.vanderbilt.inattentive"
+                       autocomplete="off" placeholder="0–9">
+              </div>
+              <div class="form-group">
+                <label for="vand-hyper">Hyperactive/impulsive ≥2 (0–9)</label>
+                <input type="number" id="vand-hyper" min="0" max="9" step="1"
+                       inputmode="numeric"
+                       data-bind="instruments.vanderbilt.hyperactive"
+                       autocomplete="off" placeholder="0–9">
+              </div>
+            </div>
+            <div class="checkbox-grid">
+              <label class="checkbox-item">
+                <input type="checkbox" data-bind="instruments.vanderbilt.performanceImpairment">
+                <span>Functional impairment present</span>
+              </label>
+            </div>
+            <div class="instrument-generated" data-generated-for="vanderbilt">
+              Enter symptom counts to see auto-interpretation.
+            </div>
+            <div class="form-group">
+              <label for="vand-override">Override (optional)</label>
+              <textarea id="vand-override" rows="2"
+                        data-bind="instruments.vanderbilt.override"
+                        autocomplete="off"
+                        placeholder="Leave blank to use the auto-interpretation above."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <h4 class="instrument-group">Anxiety &amp; mood</h4>
+
+        <div class="instrument-card" data-instrument="phq9a">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.phq9a.used"
+                   class="instrument-toggle">
+            <span class="instrument-name">PHQ-9A
+              <span class="instrument-fullname">Patient Health Questionnaire for Adolescents</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-inputs">
+              <div class="form-group">
+                <label for="phq9a-total">Total score (0–27)</label>
+                <input type="number" id="phq9a-total" min="0" max="27" step="1"
+                       inputmode="numeric"
+                       data-bind="instruments.phq9a.total"
+                       autocomplete="off" placeholder="0–27">
+              </div>
+            </div>
+            <div class="instrument-generated" data-generated-for="phq9a">
+              Enter a total score to see auto-interpretation.
+            </div>
+            <div class="form-group">
+              <label for="phq9a-override">Override (optional)</label>
+              <textarea id="phq9a-override" rows="2"
+                        data-bind="instruments.phq9a.override"
+                        autocomplete="off"
+                        placeholder="Leave blank to use the auto-interpretation above."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <h4 class="instrument-group">Global development</h4>
+
+        <div class="instrument-card" data-instrument="dp4">
+          <label class="instrument-header">
+            <input type="checkbox" data-bind="instruments.dp4.used"
+                   class="instrument-toggle">
+            <span class="instrument-name">DP-4
+              <span class="instrument-fullname">Developmental Profile, 4th ed. — domain standard scores</span>
+            </span>
+          </label>
+          <div class="instrument-body">
+            <div class="instrument-inputs">
+              <div class="form-group">
+                <label for="dp4-physical">Physical</label>
+                <input type="number" id="dp4-physical" min="40" max="160" step="1"
+                       inputmode="numeric" data-bind="instruments.dp4.physical"
+                       autocomplete="off" placeholder="SS">
+              </div>
+              <div class="form-group">
+                <label for="dp4-adaptive">Adaptive Behavior</label>
+                <input type="number" id="dp4-adaptive" min="40" max="160" step="1"
+                       inputmode="numeric" data-bind="instruments.dp4.adaptive"
+                       autocomplete="off" placeholder="SS">
+              </div>
+              <div class="form-group">
+                <label for="dp4-social">Social-Emotional</label>
+                <input type="number" id="dp4-social" min="40" max="160" step="1"
+                       inputmode="numeric" data-bind="instruments.dp4.socialEmotional"
+                       autocomplete="off" placeholder="SS">
+              </div>
+              <div class="form-group">
+                <label for="dp4-cognitive">Cognitive</label>
+                <input type="number" id="dp4-cognitive" min="40" max="160" step="1"
+                       inputmode="numeric" data-bind="instruments.dp4.cognitive"
+                       autocomplete="off" placeholder="SS">
+              </div>
+              <div class="form-group">
+                <label for="dp4-comm">Communication</label>
+                <input type="number" id="dp4-comm" min="40" max="160" step="1"
+                       inputmode="numeric" data-bind="instruments.dp4.communication"
+                       autocomplete="off" placeholder="SS">
+              </div>
+            </div>
+            <div class="instrument-generated is-empty">
+              DP-4 narrative is judgment-driven (per branching-logic.md). Write interpretation below.
+            </div>
+            <div class="form-group">
+              <label for="dp4-override">Clinical interpretation</label>
+              <textarea id="dp4-override" rows="3"
+                        data-bind="instruments.dp4.override"
+                        autocomplete="off"
+                        placeholder="e.g., DP-4 yielded standard scores in the average range across all five domains, with relative weakness in social-emotional..."></textarea>
+              <span class="form-helper phi-hint">PHI-free — use "the child" or <code>[NAME]</code>.</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </details>
+
     <!-- Placeholder for future sections — kept here as a visual
          reminder that the form will grow. Style intentionally
          restrained so it doesn't compete with the real sections. -->
     <p style="color: var(--ink-faint); font-size: 13px; font-style: italic; padding: var(--sp-4); text-align: center;">
-      Remaining sections (Instruments, DSM-5-TR Criteria, Specifiers,
-      Differentials, School &amp; Letters) populate here as they are
-      built. Each follows the same pattern: state in <code>defaults()</code>,
-      form group with binding, render function extension.
+      Remaining sections (DSM-5-TR Criteria, Specifiers, Differentials,
+      School &amp; Letters) populate here as they are built. Additional
+      instruments slot in as additive <code>SCORING</code> entries and
+      <code>instrument-card</code> blocks following the same pattern.
     </p>
 
   </section>
@@ -1114,12 +1464,27 @@ function defaults() {
       behavior:      '',
       additional:    '',
     },
-    // Other sections (instruments, dsm5tr, specifiers, differentials,
-    // school, letters) are added as their form sections are implemented.
-    // defaults() must always return the full canonical shape so loaded
-    // saves are merged predictably. Adding optional keys is additive;
-    // no schema bump required as long as the field is allowed to be
-    // empty/null/false on old saves.
+    instruments: {
+      // Each instrument slot: { used, ...raw fields, override }.
+      // generated/edited are NOT persisted -- they are derived at render
+      // time (generated from SCORING[key].interpret, edited from
+      // override.trim() !== ''). Simpler than persisting and reaches
+      // the same behavior as the design decision in branching-logic.md.
+      scq:        { used: false, total: null,        override: '' },
+      vanderbilt: { used: false, inattentive: null, hyperactive: null,
+                    performanceImpairment: false,    override: '' },
+      phq9a:      { used: false, total: null,        override: '' },
+      cars2st:    { used: false, total: null,        override: '' },
+      dp4:        { used: false, physical: null, adaptive: null,
+                    socialEmotional: null, cognitive: null,
+                    communication: null,             override: '' },
+    },
+    // Other sections (dsm5tr, specifiers, differentials, school, letters)
+    // are added as their form sections are implemented. defaults() must
+    // always return the full canonical shape so loaded saves are merged
+    // predictably. Adding optional keys is additive; no schema bump
+    // required as long as the field is allowed to be empty/null/false
+    // on old saves.
   };
 }
 
@@ -1325,6 +1690,150 @@ function txtOr(value, label) {
   return v ? escapeHtml(v) : ph(label);
 }
 
+/* ============================================================
+   SCORING ENGINE — hybrid per branching-logic.md.
+   Each entry: display metadata + (optional) interpret(raw) -> {text, band}.
+   Instruments without interpret() are judgment-heavy: clinician
+   writes prose in the override field, no auto-generation.
+   `cite` references a key in docs/references.md. The ledger
+   in that file tracks which citations are verified vs pending.
+   ============================================================ */
+
+/* Keys in references.md whose verification ledger row is still
+   "pending". Auto-interpretations citing these render with a
+   [CITATION PENDING] tag in the preview only (.cite-pending,
+   stripped on copy). Update this set as ledger rows are verified. */
+const CITATIONS_PENDING = new Set([
+  'scq-rutter-2003',
+  'vanderbilt-wolraich-2003',
+  'phq-a-johnson-2002',
+]);
+
+const SCORING = {
+  scq: {
+    name: 'SCQ',
+    fullName: 'Social Communication Questionnaire',
+    cite: 'scq-rutter-2003',
+    interpret(raw) {
+      if (raw.total == null) return null;
+      const above = raw.total >= 15;
+      return {
+        band: above ? 'above-threshold' : 'below-threshold',
+        text: 'SCQ total of ' + raw.total + ' is '
+            + (above ? 'above' : 'below')
+            + ' the autism screening threshold (≥15).',
+      };
+    },
+  },
+  vanderbilt: {
+    name: 'Vanderbilt Parent',
+    fullName: 'NICHQ Vanderbilt Assessment, parent informant',
+    cite: 'vanderbilt-wolraich-2003',
+    interpret(raw) {
+      const i = raw.inattentive, h = raw.hyperactive;
+      if (i == null && h == null) return null;
+      const inattAbove = i != null && i >= 6;
+      const hyperAbove = h != null && h >= 6;
+      const parts = [];
+      if (i != null) parts.push(i + '/9 inattentive symptoms '
+        + (inattAbove ? 'meet' : 'do not meet') + ' the screening threshold (≥6)');
+      if (h != null) parts.push(h + '/9 hyperactive/impulsive symptoms '
+        + (hyperAbove ? 'meet' : 'do not meet') + ' the screening threshold (≥6)');
+      let summary;
+      if (inattAbove && hyperAbove)      summary = ' Pattern is consistent with combined presentation.';
+      else if (inattAbove)               summary = ' Pattern is consistent with predominantly inattentive presentation.';
+      else if (hyperAbove)               summary = ' Pattern is consistent with predominantly hyperactive/impulsive presentation.';
+      else if (i != null && h != null)   summary = ' Neither domain meets the screening threshold.';
+      else                               summary = '';
+      const impair = raw.performanceImpairment
+        ? ' Functional impairment was endorsed.'
+        : ' Functional impairment was not endorsed.';
+      return {
+        band: (inattAbove || hyperAbove) ? 'above-threshold' : 'below-threshold',
+        text: 'Vanderbilt parent: ' + parts.join('; ') + '.' + summary + impair,
+      };
+    },
+  },
+  phq9a: {
+    name: 'PHQ-9A',
+    fullName: 'Patient Health Questionnaire for Adolescents',
+    cite: 'phq-a-johnson-2002',
+    interpret(raw) {
+      if (raw.total == null) return null;
+      const t = raw.total;
+      let band, label;
+      if      (t <= 4)  { band = 'minimal';         label = 'minimal depressive symptoms'; }
+      else if (t <= 9)  { band = 'mild';            label = 'mild depressive symptoms'; }
+      else if (t <= 14) { band = 'moderate';        label = 'moderate depressive symptoms'; }
+      else if (t <= 19) { band = 'moderate-severe'; label = 'moderately severe depressive symptoms'; }
+      else              { band = 'severe';          label = 'severe depressive symptoms'; }
+      return {
+        band: band,
+        text: 'PHQ-9A total of ' + t + ' indicates ' + label + '.',
+      };
+    },
+  },
+  cars2st: {
+    name: 'CARS-2-ST',
+    fullName: 'Childhood Autism Rating Scale, 2nd ed. — Standard form',
+    // No interpret(): judgment-heavy per branching-logic.md.
+  },
+  dp4: {
+    name: 'DP-4',
+    fullName: 'Developmental Profile, 4th ed.',
+    // No interpret(): judgment-heavy per branching-logic.md.
+  },
+};
+
+/* Compute the auto-interp output for a given instrument key against
+   current state. Returns { text, cite, pending } or null. */
+function scoreInstrument(key, s) {
+  const def = SCORING[key];
+  if (!def || typeof def.interpret !== 'function') return null;
+  const slot = (s.instruments || {})[key];
+  if (!slot || !slot.used) return null;
+  const result = def.interpret(slot);
+  if (!result) return null;
+  return {
+    text: result.text,
+    band: result.band,
+    cite: def.cite,
+    pending: def.cite ? CITATIONS_PENDING.has(def.cite) : false,
+  };
+}
+
+/* Compose the effective output line for an instrument: override if
+   the clinician typed one, generated otherwise. Returns { html, edited,
+   pending } where html is the prose fragment + any preview-only meta
+   tags (.cite-pending, .edit-badge). */
+function instrumentOutput(key, s) {
+  const slot = (s.instruments || {})[key];
+  if (!slot || !slot.used) return null;
+  const override = (slot.override || '').trim();
+  const generated = scoreInstrument(key, s);
+  const def = SCORING[key];
+
+  if (override) {
+    // Clinician took authorship. No citation tag (their words), but
+    // do show an edit badge so they can see what was changed.
+    let html = escapeHtml(override);
+    html += '<span class="edit-badge meta-tag">edited</span>';
+    return { html, edited: true, pending: false };
+  }
+  if (generated) {
+    let html = escapeHtml(generated.text);
+    if (generated.pending) {
+      html += '<span class="cite-pending meta-tag" title="Citation pending verification in references.md">[citation pending]</span>';
+    }
+    return { html, edited: false, pending: generated.pending };
+  }
+  // Used but no scores and no override.
+  return {
+    html: '<em>' + escapeHtml(def ? def.name : key) + ' marked as used; no scores or interpretation entered yet.</em>',
+    edited: false, pending: false,
+  };
+}
+
 function totalMonths(d) {
   const y = (typeof d.ageYears  === 'number') ? d.ageYears  : null;
   const m = (typeof d.ageMonths === 'number') ? d.ageMonths : null;
@@ -1501,13 +2010,63 @@ function renderAP(s) {
         ? ' <em>Additional:</em> ' + escapeHtml((o.additional || '').trim())
         : '') +
     '</p>',
+    renderInstrumentsParagraph(s),
     '<p><em>Additional Assessment &amp; Plan content populates as remaining sections of the documentation form are completed.</em></p>',
   ].join('');
+}
+
+/* Instruments paragraph -- one bullet per used instrument. Returns
+   an empty string if no instruments are marked used (the section
+   simply does not appear in the A&P). */
+function renderInstrumentsParagraph(s) {
+  const instr = s.instruments || {};
+  const keys = Object.keys(SCORING).filter(k => instr[k] && instr[k].used);
+  if (!keys.length) return '';
+
+  const lines = keys.map(k => {
+    const def = SCORING[k];
+    const out = instrumentOutput(k, s);
+    return '<li><strong>' + escapeHtml(def.name) + '.</strong> ' + (out ? out.html : '') + '</li>';
+  });
+  return '<p><strong>Instruments administered.</strong></p><ul>' + lines.join('') + '</ul>';
 }
 
 function mount() {
   document.getElementById('output').innerHTML = renderAP(S);
   updateAgeHelper();
+  updateInstrumentCards();
+}
+
+/* Reflect instrument state in the form UI:
+   - .is-used class on each card mirrors the Used checkbox.
+   - The generated-readout div under each card shows the live
+     auto-interpretation so the clinician sees what the renderer
+     is producing without scrolling to the preview pane. */
+function updateInstrumentCards() {
+  document.querySelectorAll('.instrument-card[data-instrument]').forEach(card => {
+    const key = card.dataset.instrument;
+    const slot = (S.instruments || {})[key];
+    const used = !!(slot && slot.used);
+    card.classList.toggle('is-used', used);
+
+    const gen = card.querySelector('[data-generated-for="' + key + '"]');
+    if (!gen) return; // judgment-heavy cards have no live readout
+    const scored = used ? scoreInstrument(key, S) : null;
+    if (scored) {
+      gen.classList.remove('is-empty');
+      let html = escapeHtml(scored.text);
+      if (scored.pending) {
+        html += '<span class="cite-pending meta-tag">[citation pending]</span>';
+      }
+      gen.innerHTML = html;
+    } else if (used) {
+      gen.classList.add('is-empty');
+      gen.textContent = 'Enter scores above to see auto-interpretation.';
+    } else {
+      gen.classList.add('is-empty');
+      gen.textContent = 'Mark as used and enter scores to see auto-interpretation.';
+    }
+  });
 }
 function updateAgeHelper() {
   const el = document.getElementById('age-display');
@@ -1524,8 +2083,14 @@ function updateAgeHelper() {
    ============================================================ */
 async function copyOutput() {
   const output = document.getElementById('output');
-  const html = output.innerHTML;
-  const text = output.innerText;
+  // Clone + strip preview-only meta tags (.cite-pending, .edit-badge)
+  // so unverified-provenance markers and clinician-edit badges never
+  // ship into Epic. Anything that should stay clinician-only must
+  // carry the .meta-tag class.
+  const clone = output.cloneNode(true);
+  clone.querySelectorAll('.meta-tag').forEach(n => n.remove());
+  const html = clone.innerHTML;
+  const text = clone.innerText;
   const btn = document.querySelector('.copy-btn');
   const status = document.getElementById('copy-status');
   try {

@@ -317,6 +317,32 @@ input, select, textarea { font-family: inherit; }
   transition: border-color var(--dur-fast) var(--ease-out);
 }
 .form-group input[type="number"] { font-family: var(--font-mono); }
+
+/* Age uses two side-by-side inputs (years + months) — single
+   "ageMonths" was hostile UX for older children. */
+.age-inputs {
+  display: flex;
+  gap: var(--sp-3);
+}
+.age-field {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+  flex: 1;
+  min-width: 0;
+}
+.age-field input {
+  flex: 1;
+  min-width: 0;
+}
+.age-unit {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink-muted);
+  text-transform: lowercase;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
 .form-group input:hover,
 .form-group select:hover,
 .form-group textarea:hover {
@@ -568,10 +594,21 @@ input, select, textarea { font-family: inherit; }
       <div class="section-body">
 
         <div class="form-group">
-          <label for="age-months">Age (months)</label>
-          <input type="number" id="age-months" min="12" max="264" step="1"
-                 inputmode="numeric" data-bind="demographics.ageMonths"
-                 autocomplete="off">
+          <label for="age-years">Age</label>
+          <div class="age-inputs">
+            <div class="age-field">
+              <input type="number" id="age-years" min="1" max="22" step="1"
+                     inputmode="numeric" data-bind="demographics.ageYears"
+                     autocomplete="off" placeholder="1–22">
+              <span class="age-unit">years</span>
+            </div>
+            <div class="age-field">
+              <input type="number" id="age-months" min="0" max="11" step="1"
+                     inputmode="numeric" data-bind="demographics.ageMonths"
+                     autocomplete="off" placeholder="0–11">
+              <span class="age-unit">months</span>
+            </div>
+          </div>
           <span class="form-helper" id="age-display"></span>
         </div>
 
@@ -665,7 +702,7 @@ input, select, textarea { font-family: inherit; }
    SCHEMA — version bumps require a migration function below.
    Bumping without migrating will refuse to load older saves.
    ============================================================ */
-const SCHEMA = 1;
+const SCHEMA = 2;
 const STORAGE_KEY = '2test:session:current';
 
 function defaults() {
@@ -676,7 +713,8 @@ function defaults() {
       savedAt:       null,
     },
     demographics: {
-      ageMonths:       null,
+      ageYears:        null,  // 1-22
+      ageMonths:       null,  // 0-11; months within the year
       sex:             '',
       insurerCategory: '',
     },
@@ -764,14 +802,40 @@ function loadFromStorage() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return;
-    const loaded = JSON.parse(raw);
-    if (loaded && loaded.meta && loaded.meta.schemaVersion === SCHEMA) {
+    let loaded = JSON.parse(raw);
+    if (!loaded || !loaded.meta) return;
+    if (loaded.meta.schemaVersion < SCHEMA) loaded = migrate(loaded);
+    if (loaded.meta.schemaVersion === SCHEMA) {
       S = deepMerge(defaults(), loaded);
       if (loaded.meta.savedAt) lastSavedAt = new Date(loaded.meta.savedAt).getTime();
     }
   } catch (e) {
     // Corrupt storage — leave defaults in place rather than crash.
   }
+}
+
+/* Schema migrations — applied in order until loaded.schemaVersion
+   matches current SCHEMA. Add a new entry for each version bump. */
+const MIGRATIONS = {
+  1: function v1_to_v2(s) {
+    // v1: demographics.ageMonths was a single 12-264 integer.
+    // v2: split into ageYears (1-22) + ageMonths (0-11).
+    if (s.demographics && typeof s.demographics.ageMonths === 'number') {
+      const total = s.demographics.ageMonths;
+      s.demographics.ageYears  = Math.floor(total / 12);
+      s.demographics.ageMonths = total % 12;
+    }
+    s.meta.schemaVersion = 2;
+    return s;
+  },
+};
+function migrate(s) {
+  while (s.meta.schemaVersion < SCHEMA) {
+    const fn = MIGRATIONS[s.meta.schemaVersion];
+    if (!fn) throw new Error('No migration from schema v' + s.meta.schemaVersion);
+    s = fn(s);
+  }
+  return s;
 }
 function deepMerge(base, overlay) {
   const out = Array.isArray(base) ? base.slice() : Object.assign({}, base);
@@ -830,15 +894,23 @@ async function decodeSession(str) {
    ============================================================ */
 function ph(label) { return '<mark class="ph">[' + label + ']</mark>'; }
 
-function ageDisplay(months) {
-  if (months == null || months === '') return ph('AGE');
-  if (months < 36) return months + '-month-old';
-  return Math.floor(months / 12) + '-year-old';
+function totalMonths(d) {
+  const y = (typeof d.ageYears  === 'number') ? d.ageYears  : null;
+  const m = (typeof d.ageMonths === 'number') ? d.ageMonths : null;
+  if (y == null && m == null) return null;
+  return (y || 0) * 12 + (m || 0);
 }
-function sexDescriptor(sex, months) {
-  // For descriptor only — "boy/girl" under 12y, "male/female adolescent" 12y+.
-  // Falls back to "child" / "patient" when sex is unspecified.
-  const ageY = (months != null && months !== '') ? Math.floor(months / 12) : null;
+function ageDisplay(d) {
+  const total = totalMonths(d);
+  if (total == null) return ph('AGE');
+  if (total < 36) return total + '-month-old';
+  return Math.floor(total / 12) + '-year-old';
+}
+function sexDescriptor(sex, d) {
+  // "boy/girl" under 12y, "male/female adolescent" 12y+.
+  // Falls back to "child"/"adolescent" when sex is unspecified.
+  const total = totalMonths(d);
+  const ageY = total != null ? Math.floor(total / 12) : null;
   if (!sex || sex === 'intersex' || sex === 'unspecified') {
     return (ageY != null && ageY >= 12) ? 'adolescent' : 'child';
   }
@@ -858,8 +930,8 @@ function insurerSentence(cat) {
    Cites: hyman2020 (overall ASD evaluation framing). */
 function renderAP(s) {
   const d = s.demographics;
-  const age = ageDisplay(d.ageMonths);
-  const desc = sexDescriptor(d.sex, d.ageMonths);
+  const age = ageDisplay(d);
+  const desc = sexDescriptor(d.sex, d);
   const insurer = insurerSentence(d.insurerCategory);
 
   return [
@@ -877,11 +949,9 @@ function mount() {
 function updateAgeHelper() {
   const el = document.getElementById('age-display');
   if (!el) return;
-  const m = S.demographics.ageMonths;
-  if (m == null || m === '') { el.textContent = ''; return; }
-  if (m < 36) { el.textContent = m + ' months'; return; }
-  const y = Math.floor(m / 12), rem = m % 12;
-  el.textContent = (rem === 0) ? (y + ' years') : (y + ' years ' + rem + ' months');
+  const total = totalMonths(S.demographics);
+  if (total == null) { el.textContent = ''; return; }
+  el.textContent = total + ' months total';
 }
 
 /* ============================================================
@@ -965,9 +1035,14 @@ async function executeImport() {
   const str = document.getElementById('import-input').value.trim();
   if (!str) return;
   try {
-    const loaded = await decodeSession(str);
-    if (!loaded || !loaded.meta || loaded.meta.schemaVersion !== SCHEMA) {
-      alert('Schema version mismatch — this string was created in a different version of 2test.');
+    let loaded = await decodeSession(str);
+    if (!loaded || !loaded.meta) {
+      alert('Invalid session string — missing metadata.');
+      return;
+    }
+    if (loaded.meta.schemaVersion < SCHEMA) loaded = migrate(loaded);
+    if (loaded.meta.schemaVersion !== SCHEMA) {
+      alert('Schema version newer than this build of 2test. Update your local copy.');
       return;
     }
     S = deepMerge(defaults(), loaded);

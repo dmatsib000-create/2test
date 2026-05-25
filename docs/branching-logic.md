@@ -151,6 +151,22 @@ Round-1 mean for A: **91.5.** Below the ≥95% threshold. The drag was the share
 
 ---
 
+---
+
+## 2026-05-25 · Age input model — years + months, not raw months
+
+**Trigger:** clinician feedback on the first commit: *"putting everything in months is wild if the patient could be 22 years old."* Correct — typing 264 to represent a 22-year-old is hostile UX. The clinical-precision argument for months only holds for under-3s; for older children, years is the natural unit.
+
+**Decision:** Replace the single `demographics.ageMonths` integer (range 12-264) with two side-by-side inputs: `demographics.ageYears` (1-22, required) and `demographics.ageMonths` (0-11, optional). Total months is derived (`ageYears * 12 + ageMonths`) wherever clinical display logic needs it. Display rule unchanged: "X-month-old" for total <36 months, "X-year-old" otherwise.
+
+**Council:** none. The original architectural decision was a defensible-on-paper / wrong-in-the-room call. Fixing immediately rather than litigating.
+
+**Migration:** SCHEMA bumped from 1 to 2. `MIGRATIONS[1]` splits stored `ageMonths` into the new `{ageYears, ageMonths}` pair. This establishes the schema-migration pattern (a `MIGRATIONS` map keyed by source version, applied in sequence) that all future shape changes will follow.
+
+**Residual:** one extra control on the form. The age-helper text below the inputs now reads "X months total" so the clinical-precision reference is still glanceable for under-3s where months matter.
+
+---
+
 ## How to add a new entry
 
 When a non-trivial decision is made, append a section with:

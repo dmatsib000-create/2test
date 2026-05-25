@@ -46,7 +46,8 @@ S = {
   },
 
   demographics: {
-    ageMonths:        <integer 12-264, covers 1y-22y>,
+    ageYears:         <integer 1-22, required>,
+    ageMonths:        <integer 0-11, months within the year, optional>,
     sex:              "male" | "female" | "intersex" | "unspecified",
     insurerCategory:  "commercial" | "medicaid" | "tricare-champva"
   },

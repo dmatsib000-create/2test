@@ -914,13 +914,78 @@ input, select, textarea { font-family: inherit; }
       </div>
     </details>
 
+    <!-- =========================================================
+         BEHAVIORAL OBSERVATIONS — six clinician-observed facets of
+         the in-visit encounter. All free-text; no checkboxes here
+         because observation is a synthesis act, not a checklist.
+         ========================================================= -->
+    <details class="section" id="section-observations" open>
+      <summary class="section-header">
+        Behavioral Observations
+        <span class="phase-chip">in-visit</span>
+      </summary>
+      <div class="section-body">
+
+        <div class="form-group">
+          <label for="obs-appearance">Appearance</label>
+          <textarea id="obs-appearance" rows="2"
+                    data-bind="observations.appearance"
+                    autocomplete="off"
+                    placeholder="Dress, grooming, alertness, dysmorphic features if any."></textarea>
+          <span class="form-helper phi-hint">PHI-free — use "the child" or <code>[NAME]</code>.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="obs-interaction">Interaction with examiner</label>
+          <textarea id="obs-interaction" rows="2"
+                    data-bind="observations.interaction"
+                    autocomplete="off"
+                    placeholder="Eye contact, joint attention, response to name, social reciprocity."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="obs-communication">Communication</label>
+          <textarea id="obs-communication" rows="2"
+                    data-bind="observations.communication"
+                    autocomplete="off"
+                    placeholder="Verbal level, prosody, echolalia, gesture use, conversational reciprocity."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="obs-play">Play</label>
+          <textarea id="obs-play" rows="2"
+                    data-bind="observations.play"
+                    autocomplete="off"
+                    placeholder="Functional, symbolic, parallel; flexibility; preferred objects."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="obs-behavior">Behavior &amp; restricted/repetitive patterns</label>
+          <textarea id="obs-behavior" rows="2"
+                    data-bind="observations.behavior"
+                    autocomplete="off"
+                    placeholder="Stereotypies, insistence on sameness, sensory responses, intense interests."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="obs-additional">Additional observations</label>
+          <textarea id="obs-additional" rows="2"
+                    data-bind="observations.additional"
+                    autocomplete="off"
+                    placeholder="Anything noteworthy that doesn't fit above. Often blank — that's fine."></textarea>
+          <span class="form-helper phi-hint">PHI-free — use "the child" or <code>[NAME]</code>.</span>
+        </div>
+
+      </div>
+    </details>
+
     <!-- Placeholder for future sections — kept here as a visual
          reminder that the form will grow. Style intentionally
          restrained so it doesn't compete with the real sections. -->
     <p style="color: var(--ink-faint); font-size: 13px; font-style: italic; padding: var(--sp-4); text-align: center;">
-      Remaining sections (Observations, Instruments, DSM-5-TR Criteria,
-      Specifiers, Differentials, School &amp; Letters) populate here as they
-      are built. Each follows the same pattern: state in <code>defaults()</code>,
+      Remaining sections (Instruments, DSM-5-TR Criteria, Specifiers,
+      Differentials, School &amp; Letters) populate here as they are
+      built. Each follows the same pattern: state in <code>defaults()</code>,
       form group with binding, render function extension.
     </p>
 
@@ -1041,12 +1106,20 @@ function defaults() {
         otherRelevant:    '',
       },
     },
-    // Other sections (observations, instruments, dsm5tr, specifiers,
-    // differentials, school, letters) are added as their form sections
-    // are implemented. defaults() must always return the full canonical
-    // shape so loaded saves are merged predictably. Adding optional
-    // keys is additive; no schema bump required as long as the field
-    // is allowed to be empty/null/false on old saves.
+    observations: {
+      appearance:    '',
+      interaction:   '',
+      communication: '',
+      play:          '',
+      behavior:      '',
+      additional:    '',
+    },
+    // Other sections (instruments, dsm5tr, specifiers, differentials,
+    // school, letters) are added as their form sections are implemented.
+    // defaults() must always return the full canonical shape so loaded
+    // saves are merged predictably. Adding optional keys is additive;
+    // no schema bump required as long as the field is allowed to be
+    // empty/null/false on old saves.
   };
 }
 
@@ -1320,11 +1393,12 @@ const SETTING_PROSE = {
 
 /* renderAP — Assessment & Plan, vertical-slice version.
    Cites: hyman2020 (overall ASD evaluation framing).
-   Sections wired so far: Demographics, Concerns, History. */
+   Sections wired so far: Demographics, Concerns, History, Observations. */
 function renderAP(s) {
   const d = s.demographics;
   const c = s.concerns || {};
   const h = s.history || {};
+  const o = s.observations || {};
   const age = ageDisplay(d);
   const desc = sexDescriptor(d.sex, d);
   const insurer = insurerSentence(d.insurerCategory);
@@ -1417,6 +1491,16 @@ function renderAP(s) {
     '<p><strong>Family history.</strong> ' + famText + '</p>',
     '<p><strong>Social.</strong> ' + socText + '</p>',
     '<p><strong>Medications.</strong> ' + medsText + '</p>',
+    '<p><strong>Behavioral observations.</strong> ' +
+      '<em>Appearance:</em> ' + txtOr(o.appearance, 'APPEARANCE') + ' ' +
+      '<em>Interaction:</em> ' + txtOr(o.interaction, 'INTERACTION WITH EXAMINER') + ' ' +
+      '<em>Communication:</em> ' + txtOr(o.communication, 'COMMUNICATION') + ' ' +
+      '<em>Play:</em> ' + txtOr(o.play, 'PLAY') + ' ' +
+      '<em>Behavior:</em> ' + txtOr(o.behavior, 'BEHAVIOR') +
+      ((o.additional || '').trim()
+        ? ' <em>Additional:</em> ' + escapeHtml((o.additional || '').trim())
+        : '') +
+    '</p>',
     '<p><em>Additional Assessment &amp; Plan content populates as remaining sections of the documentation form are completed.</em></p>',
   ].join('');
 }
